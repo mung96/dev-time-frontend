@@ -3027,6 +3027,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dev-time@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "dev-time@workspace:."
+  dependencies:
+    "@hookform/devtools": ^4.4.0
+    "@hookform/resolvers": ^5.2.2
+    "@tailwindcss/postcss": ^4
+    "@tanstack/eslint-plugin-query": ^5.91.2
+    "@tanstack/react-query": ^5.90.11
+    "@tanstack/react-query-devtools": ^5.91.1
+    "@testing-library/dom": ^10.4.1
+    "@testing-library/react": ^16.3.0
+    "@types/node": ^20
+    "@types/react": ^19.2.7
+    "@types/react-dom": ^19.2.3
+    clsx: ^2.1.1
+    eslint: ^9
+    eslint-config-next: 16.0.7
+    jest: ^30.2.0
+    next: 16.0.7
+    react: 19.2.0
+    react-dom: 19.2.0
+    react-hook-form: ^7.68.0
+    tailwindcss: ^4
+    typescript: ^5
+    zod: ^4.1.13
+    zustand: ^5.0.9
+  languageName: unknown
+  linkType: soft
+
 "doctrine@npm:^2.1.0":
   version: 2.1.0
   resolution: "doctrine@npm:2.1.0"
@@ -3775,36 +3805,6 @@ __metadata:
   checksum: b2c1a6fc0bf0233d645d9fefdfa999abf37db1b33e5dab172b3cbfb0662b88bfbd2c9e7ab853533d199050ec6b65c03fcf078fc212d26e4990220e98c6930eef
   languageName: node
   linkType: hard
-
-"frontend-challenge@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "frontend-challenge@workspace:."
-  dependencies:
-    "@hookform/devtools": ^4.4.0
-    "@hookform/resolvers": ^5.2.2
-    "@tailwindcss/postcss": ^4
-    "@tanstack/eslint-plugin-query": ^5.91.2
-    "@tanstack/react-query": ^5.90.11
-    "@tanstack/react-query-devtools": ^5.91.1
-    "@testing-library/dom": ^10.4.1
-    "@testing-library/react": ^16.3.0
-    "@types/node": ^20
-    "@types/react": ^19.2.7
-    "@types/react-dom": ^19.2.3
-    clsx: ^2.1.1
-    eslint: ^9
-    eslint-config-next: 16.0.7
-    jest: ^30.2.0
-    next: 16.0.7
-    react: 19.2.0
-    react-dom: 19.2.0
-    react-hook-form: ^7.68.0
-    tailwindcss: ^4
-    typescript: ^5
-    zod: ^4.1.13
-    zustand: ^5.0.9
-  languageName: unknown
-  linkType: soft
 
 "fs-minipass@npm:^3.0.0":
   version: 3.0.3
