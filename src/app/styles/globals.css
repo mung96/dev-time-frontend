@@ -26,6 +26,31 @@
   --color-gray-600: #4b5563;
   --color-gray-700: #394252;
   --color-gray-800: #1f2937;
+
+  /* font */
+  --font-pretendard: "Pretendard", sans-serif;
+
+  /* text */
+  --text-heading: 24px;
+  --text-heading--line-height: 30px;
+
+  --text-title: 24px;
+  --text-title--line-height: 30px;
+
+  --text-subtitle: 18px;
+  --text-subtitle--line-height: 22px;
+
+  --text-body: 16px;
+  --text-body--line-height: 20px;
+
+  --text-body-small: 14px;
+  --text-body-small--line-height: 18px;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+
+  --text-label: 10px;
+  --text-label--line-height: 12px;
 }
 
 @media (prefers-color-scheme: dark) {
