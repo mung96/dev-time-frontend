@@ -5,6 +5,7 @@ import {
   SignUpFormValues,
   SignUpFormValuesSchema,
 } from "@pages/auth/model/signup-form-values.schema";
+import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
 import { TextField } from "@shared/ui/text-field";
 import { HelperText } from "@shared/ui/text-field/helper-text";
@@ -124,7 +125,10 @@ export const SignupPage = () => {
             <span className="text-primary text-body font-medium">
               회원이신가요?
             </span>{" "}
-            <Link href="/login" className="text-primary text-body font-bold ">
+            <Link
+              href={PATH.LOGIN}
+              className="text-primary text-body font-bold "
+            >
               로그인 바로가기
             </Link>
           </p>

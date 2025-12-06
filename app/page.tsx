@@ -1,14 +1,10 @@
-import { Button } from "@shared/ui";
+import { PATH } from "@shared/routes/path";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div>
-      <p className="text-title font-bold">프리텐다드X</p>
-      <Button priority="primary">Primary</Button>
-      <Button priority="secondary">Secondary</Button>
-      <Button priority="tertiary">Tertiary</Button>
-
-      <p className="text-title font-medium font-pretendard">프리텐다드O</p>
+      <Link href={PATH.SIGNUP}>회원가입 페이지로 이동하기</Link>
     </div>
   );
 }
