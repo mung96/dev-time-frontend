@@ -1,5 +1,10 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { checkEmail } from "@pages/auth/api/check-email";
+import {
+  SignUpFormValues,
+  SignUpFormValuesSchema,
+} from "@pages/auth/model/signup-form-values.schema";
 import { Button } from "@shared/ui";
 import { TextField } from "@shared/ui/text-field";
 import { HelperText } from "@shared/ui/text-field/helper-text";
@@ -7,33 +12,11 @@ import { TextFieldButton } from "@shared/ui/text-field/text-field-button";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import z from "zod";
-
-const PASSWORD_ERROR_MESSAGE =
-  "비밀번호는 8자 이상, 영문과 숫자 조합이어야 합니다.";
-
-export const SignUpFormValuesSchema = z
-  .object({
-    email: z.email({ message: "이메일 형식으로 작성해 주세요." }),
-    nickname: z.string().min(1, "닉네임을 입력해 주세요."),
-    password: z
-      .string()
-      .min(8, { message: PASSWORD_ERROR_MESSAGE })
-      .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/, {
-        message: PASSWORD_ERROR_MESSAGE,
-      }),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "비밀번호가 일치하지 않습니다.",
-    path: ["confirmPassword"],
-  });
-
-export type SignUpFormValues = z.infer<typeof SignUpFormValuesSchema>;
 
 export const SignUpPage = () => {
   const {
     register,
+    getValues,
     formState: { errors },
   } = useForm<SignUpFormValues>({
     defaultValues: {
@@ -72,7 +55,18 @@ export const SignUpPage = () => {
                 label={"아이디"}
                 placeholder="이메일 주소 형식으로 입력해 주세요."
                 {...register("email")}
-                button={<TextFieldButton>중복 확인</TextFieldButton>}
+                button={
+                  <TextFieldButton
+                    type="button"
+                    onClick={async () => {
+                      const email = getValues("email");
+                      const res = await checkEmail(email);
+                      console.log(res);
+                    }}
+                  >
+                    중복 확인
+                  </TextFieldButton>
+                }
                 helperText={
                   <HelperText state={"error"}>
                     {errors.email?.message}
