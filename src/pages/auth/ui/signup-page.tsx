@@ -1,10 +1,34 @@
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { checkEmail } from "@pages/auth/api/check-email";
+import {
+  SignUpFormValues,
+  SignUpFormValuesSchema,
+} from "@pages/auth/model/signup-form-values.schema";
+import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
 import { TextField } from "@shared/ui/text-field";
+import { HelperText } from "@shared/ui/text-field/helper-text";
 import { TextFieldButton } from "@shared/ui/text-field/text-field-button";
 import Image from "next/image";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
 
-export const SignUpPage = () => {
+export const SignupPage = () => {
+  const {
+    register,
+    getValues,
+    formState: { errors },
+  } = useForm<SignUpFormValues>({
+    defaultValues: {
+      email: "",
+      nickname: "",
+      password: "",
+      confirmPassword: "",
+    },
+    resolver: zodResolver(SignUpFormValuesSchema),
+    mode: "onTouched",
+  });
   return (
     <div className="flex h-full">
       <div className="flex-1 bg-primary flex items-center justify-center">
@@ -31,26 +55,57 @@ export const SignUpPage = () => {
               <TextField
                 label={"아이디"}
                 placeholder="이메일 주소 형식으로 입력해 주세요."
-                button={<TextFieldButton>중복 확인</TextFieldButton>}
-                helperText={undefined}
+                {...register("email")}
+                button={
+                  <TextFieldButton
+                    type="button"
+                    onClick={async () => {
+                      const email = getValues("email");
+                      const res = await checkEmail(email);
+                      console.log(res);
+                    }}
+                  >
+                    중복 확인
+                  </TextFieldButton>
+                }
+                helperText={
+                  <HelperText state={"error"}>
+                    {errors.email?.message}
+                  </HelperText>
+                }
               />
               <TextField
                 label={"닉네임"}
-                placeholder="닉네임을 입력해 주세요.."
+                placeholder="닉네임을 입력해 주세요."
+                {...register("nickname")}
                 button={<TextFieldButton>중복 확인</TextFieldButton>}
-                helperText={undefined}
+                helperText={
+                  <HelperText state={"error"}>
+                    {errors.nickname?.message}
+                  </HelperText>
+                }
               />
               <TextField
                 label={"비밀번호"}
                 type="password"
+                {...register("password")}
                 placeholder="비밀번호를 입력해 주세요."
-                helperText={undefined}
+                helperText={
+                  <HelperText state={"error"}>
+                    {errors.password?.message}
+                  </HelperText>
+                }
               />
               <TextField
                 label={"비밀번호 확인"}
                 type="password"
+                {...register("confirmPassword")}
                 placeholder="비밀번호를 다시 입력해 주세요."
-                helperText={undefined}
+                helperText={
+                  <HelperText state={"error"}>
+                    {errors.confirmPassword?.message}
+                  </HelperText>
+                }
               />
               <section>
                 <div className="flex justify-between">
@@ -70,7 +125,10 @@ export const SignUpPage = () => {
             <span className="text-primary text-body font-medium">
               회원이신가요?
             </span>{" "}
-            <Link href="/login" className="text-primary text-body font-bold ">
+            <Link
+              href={PATH.LOGIN}
+              className="text-primary text-body font-bold "
+            >
               로그인 바로가기
             </Link>
           </p>
