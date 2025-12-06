@@ -13,7 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 
-export const SignUpPage = () => {
+export const SignupPage = () => {
   const {
     register,
     getValues,
