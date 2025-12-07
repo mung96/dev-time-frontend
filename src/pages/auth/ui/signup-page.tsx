@@ -119,6 +119,7 @@ export const SignupPage = () => {
                     )}
                   </>
                 }
+                isError={!!errors.email?.message}
               />
               <TextField
                 label={"닉네임"}
@@ -164,6 +165,7 @@ export const SignupPage = () => {
                     )}
                   </>
                 }
+                isError={!!errors.nickname?.message}
               />
               <TextField
                 label={"비밀번호"}
@@ -175,6 +177,7 @@ export const SignupPage = () => {
                     {errors.password?.message}
                   </HelperText>
                 }
+                isError={!!errors.password?.message}
               />
               <TextField
                 label={"비밀번호 확인"}
@@ -186,6 +189,7 @@ export const SignupPage = () => {
                     {errors.confirmPassword?.message}
                   </HelperText>
                 }
+                isError={!!errors.confirmPassword?.message}
               />
               <section>
                 <div className="flex justify-between">
