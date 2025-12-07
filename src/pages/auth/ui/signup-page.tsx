@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkEmail } from "@pages/auth/api/check-email";
+import { ApiError, HttpStatus } from "@shared/api";
 import {
   SignUpFormValues,
   SignUpFormValuesSchema,
@@ -18,6 +19,7 @@ export const SignupPage = () => {
   const {
     register,
     getValues,
+    setError,
     formState: { errors },
   } = useForm<SignUpFormValues>({
     defaultValues: {
@@ -59,10 +61,22 @@ export const SignupPage = () => {
                 button={
                   <TextFieldButton
                     type="button"
-                    onClick={async () => {
+                    onClick={() => {
                       const email = getValues("email");
-                      const res = await checkEmail(email);
-                      console.log(res);
+                      checkEmail(email)
+                        .then((response) => {
+                          console.dir("response", response);
+                        })
+                        .catch((error) => {
+                          if (error instanceof ApiError) {
+                            if (error.status === HttpStatus.BAD_REQUEST) {
+                              setError("email", {
+                                type: "manual",
+                                message: error.message,
+                              });
+                            }
+                          }
+                        });
                     }}
                   >
                     중복 확인
