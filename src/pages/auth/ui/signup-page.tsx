@@ -16,12 +16,17 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { checkNickname } from "@pages/auth/api/check-nickname";
 import { useState } from "react";
+import { signup } from "@pages/auth/api/signup";
+import { DevTool } from "@hookform/devtools";
+import { useRouter } from "next/navigation";
 
 export const SignupPage = () => {
   const {
     register,
     getValues,
     setError,
+    handleSubmit,
+    control,
     formState: { errors },
   } = useForm<SignUpFormValues>({
     defaultValues: {
@@ -33,6 +38,7 @@ export const SignupPage = () => {
     resolver: zodResolver(SignUpFormValuesSchema),
     mode: "onTouched",
   });
+  const router = useRouter();
 
   const [isValidDuplicateEmail, setIsValidDuplicateEmail] = useState(false);
   const [isValidDuplicateNickname, setIsValidDuplicateNickname] =
@@ -56,9 +62,18 @@ export const SignupPage = () => {
       </div>
       <div className="flex-1 flex justify-center w-full">
         <div className="flex flex-col items-center gap-6">
-          <form className="mt-[140px] w-105 flex flex-col gap-6">
+          <form
+            className="mt-[140px] w-105 flex flex-col gap-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit((data) => {
+                signup(data).then(() => {
+                  router.replace(PATH.LOGIN);
+                });
+              })();
+            }}
+          >
             <h2 className="text-heading text-primary text-center">회원가입</h2>
-
             <fieldset className="flex flex-col gap-10">
               <TextField
                 label={"아이디"}
@@ -182,8 +197,11 @@ export const SignupPage = () => {
                 </div>
               </section>
             </fieldset>
-
-            <Button priority={"primary"}> 회원가입</Button>
+            <Button priority={"primary"} type="submit">
+              {" "}
+              회원가입
+            </Button>
+            <DevTool control={control} /> {/* set up the dev tool */}
           </form>
 
           <p>
