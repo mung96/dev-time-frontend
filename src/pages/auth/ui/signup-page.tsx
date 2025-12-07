@@ -20,6 +20,8 @@ import { useState } from "react";
 import { signup } from "@pages/auth/api/signup";
 import { DevTool } from "@hookform/devtools";
 import { useRouter } from "next/navigation";
+import { TermsService } from "@pages/auth/ui/terms-service";
+import clsx from "clsx";
 
 export const SignupPage = () => {
   const {
@@ -229,17 +231,27 @@ export const SignupPage = () => {
                 }
                 isError={!!errors.confirmPassword?.message}
               />
-              <section>
+              <section className="flex flex-col gap-2">
                 <div className="flex justify-between">
                   <span>이용약관</span>
-                  <Checkbox
-                    checked={isChecked}
-                    onChange={(e) => setIsChecked(e.target.checked)}
-                  />
+                  <div className="flex gap-1 items-center">
+                    <label
+                      htmlFor="terms"
+                      className={clsx(
+                        "text-small text-medium text-primary/30",
+                        isChecked && "text-primary/100"
+                      )}
+                    >
+                      동의함
+                    </label>
+                    <Checkbox
+                      id="terms"
+                      checked={isChecked}
+                      onChange={(e) => setIsChecked(e.target.checked)}
+                    />
+                  </div>
                 </div>
-                <div className="bg-gray-50 h-[110px] overflow-y-scroll py-3 px-4">
-                  {TERMS_OF_SERVICE_CONTENT}
-                </div>
+                <TermsService />
               </section>
             </fieldset>
             <Button
@@ -268,6 +280,3 @@ export const SignupPage = () => {
     </div>
   );
 };
-
-const TERMS_OF_SERVICE_CONTENT =
-  "안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕";
