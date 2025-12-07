@@ -8,19 +8,29 @@ import {
 } from "@pages/auth/model/signup-form-values.schema";
 import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
+import { Checkbox } from "@shared/ui/checkbox";
 import { TextField } from "@shared/ui/text-field";
 import { HelperText } from "@shared/ui/text-field/helper-text";
 import { TextFieldButton } from "@shared/ui/text-field/text-field-button";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { checkNickname } from "@pages/auth/api/check-nickname";
+import { useState } from "react";
+import { signup } from "@pages/auth/api/signup";
+import { DevTool } from "@hookform/devtools";
+import { useRouter } from "next/navigation";
+import { TermsService } from "@pages/auth/ui/terms-service";
+import clsx from "clsx";
 
 export const SignupPage = () => {
   const {
     register,
     getValues,
     setError,
-    formState: { errors },
+    handleSubmit,
+    control,
+    formState: { errors, touchedFields, isValid, isSubmitting },
   } = useForm<SignUpFormValues>({
     defaultValues: {
       email: "",
@@ -31,6 +41,17 @@ export const SignupPage = () => {
     resolver: zodResolver(SignUpFormValuesSchema),
     mode: "onTouched",
   });
+  const router = useRouter();
+
+  const [isValidDuplicateEmail, setIsValidDuplicateEmail] = useState(false);
+  const [isValidDuplicateNickname, setIsValidDuplicateNickname] =
+    useState(false);
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  const isFormValid =
+    isChecked && isValidDuplicateEmail && isValidDuplicateNickname && isValid;
+
   return (
     <div className="flex h-full">
       <div className="flex-1 bg-primary flex items-center justify-center">
@@ -50,28 +71,49 @@ export const SignupPage = () => {
       </div>
       <div className="flex-1 flex justify-center w-full">
         <div className="flex flex-col items-center gap-6">
-          <form className="mt-[140px] w-105 flex flex-col gap-6">
+          <form
+            className="mt-[140px] w-105 flex flex-col gap-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(async (data) => {
+                await signup(data);
+                router.replace(PATH.LOGIN);
+              })();
+            }}
+          >
             <h2 className="text-heading text-primary text-center">회원가입</h2>
-
             <fieldset className="flex flex-col gap-10">
               <TextField
                 label={"아이디"}
                 placeholder="이메일 주소 형식으로 입력해 주세요."
-                {...register("email")}
+                {...register("email", {
+                  onChange: () => setIsValidDuplicateEmail(false),
+                })}
                 button={
                   <TextFieldButton
                     type="button"
+                    disabled={
+                      !touchedFields.email ||
+                      errors.email?.type === "invalid_format"
+                    }
                     onClick={() => {
                       const email = getValues("email");
                       checkEmail(email)
                         .then((response) => {
-                          console.dir("response", response);
+                          if (response.available) {
+                            setIsValidDuplicateEmail(true);
+                          } else {
+                            setError("email", {
+                              type: "duplicate",
+                              message: response.message,
+                            });
+                          }
                         })
                         .catch((error) => {
                           if (error instanceof ApiError) {
                             if (error.status === HttpStatus.BAD_REQUEST) {
                               setError("email", {
-                                type: "manual",
+                                type: "invalid_format",
                                 message: error.message,
                               });
                             }
@@ -83,21 +125,87 @@ export const SignupPage = () => {
                   </TextFieldButton>
                 }
                 helperText={
-                  <HelperText state={"error"}>
-                    {errors.email?.message}
-                  </HelperText>
+                  <>
+                    {!!touchedFields.email ? (
+                      !!errors.email?.message ? (
+                        <HelperText state={"error"}>
+                          {errors.email?.message}
+                        </HelperText>
+                      ) : (
+                        isValidDuplicateEmail && (
+                          <HelperText state={"success"}>
+                            사용 가능한 이메일입니다.
+                          </HelperText>
+                        )
+                      )
+                    ) : (
+                      <></>
+                    )}
+                  </>
                 }
+                isError={!!errors.email?.message}
               />
               <TextField
                 label={"닉네임"}
                 placeholder="닉네임을 입력해 주세요."
-                {...register("nickname")}
-                button={<TextFieldButton>중복 확인</TextFieldButton>}
-                helperText={
-                  <HelperText state={"error"}>
-                    {errors.nickname?.message}
-                  </HelperText>
+                {...register("nickname", {
+                  onChange: () => setIsValidDuplicateNickname(false),
+                })}
+                button={
+                  <TextFieldButton
+                    type="button"
+                    disabled={
+                      !touchedFields.nickname ||
+                      errors.nickname?.type === "invalid_format"
+                    }
+                    onClick={() => {
+                      const nickname = getValues("nickname");
+                      checkNickname(nickname)
+                        .then((response) => {
+                          if (response.available) {
+                            setIsValidDuplicateNickname(true);
+                          } else {
+                            setError("nickname", {
+                              type: "duplicate",
+                              message: response.message,
+                            });
+                          }
+                        })
+                        .catch((error) => {
+                          if (error instanceof ApiError) {
+                            if (error.status === HttpStatus.BAD_REQUEST) {
+                              setError("nickname", {
+                                type: "invalid_format",
+                                message: error.message,
+                              });
+                            }
+                          }
+                        });
+                    }}
+                  >
+                    중복 확인
+                  </TextFieldButton>
                 }
+                helperText={
+                  <>
+                    {!!touchedFields.nickname ? (
+                      !!errors.nickname?.message ? (
+                        <HelperText state={"error"}>
+                          {errors.nickname?.message}
+                        </HelperText>
+                      ) : (
+                        isValidDuplicateNickname && (
+                          <HelperText state={"success"}>
+                            사용 가능한 닉네임입니다.
+                          </HelperText>
+                        )
+                      )
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                }
+                isError={!!errors.nickname?.message}
               />
               <TextField
                 label={"비밀번호"}
@@ -109,6 +217,7 @@ export const SignupPage = () => {
                     {errors.password?.message}
                   </HelperText>
                 }
+                isError={!!errors.password?.message}
               />
               <TextField
                 label={"비밀번호 확인"}
@@ -120,19 +229,39 @@ export const SignupPage = () => {
                     {errors.confirmPassword?.message}
                   </HelperText>
                 }
+                isError={!!errors.confirmPassword?.message}
               />
-              <section>
+              <section className="flex flex-col gap-2">
                 <div className="flex justify-between">
                   <span>이용약관</span>
-                  <div>체크박스</div>
+                  <div className="flex gap-1 items-center">
+                    <label
+                      htmlFor="terms"
+                      className={clsx(
+                        "text-small text-medium text-primary/30",
+                        isChecked && "text-primary/100"
+                      )}
+                    >
+                      동의함
+                    </label>
+                    <Checkbox
+                      id="terms"
+                      checked={isChecked}
+                      onChange={(e) => setIsChecked(e.target.checked)}
+                    />
+                  </div>
                 </div>
-                <div className="bg-gray-50 h-[110px] overflow-y-scroll py-3 px-4">
-                  {TERMS_OF_SERVICE_CONTENT}
-                </div>
+                <TermsService />
               </section>
             </fieldset>
-
-            <Button priority={"primary"}> 회원가입</Button>
+            <Button
+              priority={"primary"}
+              type="submit"
+              disabled={!isFormValid || isSubmitting}
+            >
+              회원가입
+            </Button>
+            <DevTool control={control} />
           </form>
 
           <p>
@@ -151,6 +280,3 @@ export const SignupPage = () => {
     </div>
   );
 };
-
-const TERMS_OF_SERVICE_CONTENT =
-  "안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕안녕";
