@@ -63,7 +63,9 @@ export const SignupPage = () => {
               <TextField
                 label={"아이디"}
                 placeholder="이메일 주소 형식으로 입력해 주세요."
-                {...register("email")}
+                {...register("email", {
+                  onChange: () => setIsValidDuplicateEmail(false),
+                })}
                 button={
                   <TextFieldButton
                     type="button"
@@ -106,7 +108,9 @@ export const SignupPage = () => {
               <TextField
                 label={"닉네임"}
                 placeholder="닉네임을 입력해 주세요."
-                {...register("nickname")}
+                {...register("nickname", {
+                  onChange: () => setIsValidDuplicateNickname(false),
+                })}
                 button={
                   <TextFieldButton
                     type="button"
@@ -133,7 +137,7 @@ export const SignupPage = () => {
                 }
                 helperText={
                   <>
-                    {errors.email?.message && (
+                    {errors.nickname?.message && (
                       <HelperText state={"error"}>
                         {errors.nickname?.message}
                       </HelperText>
