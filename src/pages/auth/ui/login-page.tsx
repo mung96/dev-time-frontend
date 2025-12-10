@@ -58,7 +58,7 @@ export const LoginPage = () => {
             })();
           }}
         >
-          <h2 className="text-heading text-primary text-center">회원가입</h2>
+          <h2 className="text-heading text-primary text-center">로그인</h2>
           <fieldset className="flex flex-col gap-10">
             <TextField
               label={"아이디"}
