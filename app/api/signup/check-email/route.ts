@@ -14,7 +14,6 @@ export async function GET(req: NextRequest) {
 
   if (!response.ok) {
     const { error } = await response.json();
-    console.error("error", error);
     return NextResponse.json({ ...error }, { status: response.status });
   }
 

@@ -9,8 +9,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { LoginFormValues } from "@pages/auth/model/login-form-values.schema";
-import { apiRequester } from "@shared/api";
 import { useRouter } from "next/navigation";
+import { login } from "@pages/auth/api/login";
 export const LoginPage = () => {
   const {
     register,
@@ -37,19 +37,9 @@ export const LoginPage = () => {
           onSubmit={(e) => {
             e.preventDefault();
             handleSubmit(async (data) => {
-              const response = await apiRequester<{
-                success: boolean;
-                available: boolean;
-                message: string;
-                accessToken: string;
-                refreshToken: string;
-                isFirstLogin: boolean;
-                isDuplicateLogin: boolean;
-              }>(`/api/login`, {
-                method: "POST",
-                body: JSON.stringify(data),
+              const response = await login({
+                ...data,
               });
-              console.log(response);
               if (response.isFirstLogin) {
                 router.push(PATH.PROFILE_CREATE);
               } else {
@@ -86,7 +76,9 @@ export const LoginPage = () => {
           <Button priority={"primary"} type="submit">
             로그인
           </Button>
-          <DevTool control={control} />
+          {process.env.NODE_ENV === "development" && (
+            <DevTool control={control} />
+          )}
         </form>
 
         <p>
