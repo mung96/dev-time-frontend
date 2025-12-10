@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ReactQueryProvider } from "@app/providers";
+import { ModalProvider, ReactQueryProvider } from "@app/providers";
 import "@app/styles/globals.css";
 import "@app/styles/font.css";
 
@@ -16,7 +16,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`font-pretendard`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <div id="modal-root"></div>
+        <ModalProvider>
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </ModalProvider>
       </body>
     </html>
   );
