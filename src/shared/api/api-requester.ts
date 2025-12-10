@@ -1,15 +1,10 @@
-const API_SERVER_URL = process.env.NEXT_PUBLIC_API_SERVER_URL;
-
 export const apiRequester = async <T = unknown>(
   endpoint: string,
   options: RequestInit
 ): Promise<T> => {
-  // const apiUrl = API_SERVER_URL + endpoint;
-  const apiUrl = endpoint;
-
   const { headers, ...restOptions } = options;
 
-  const response = await fetch(apiUrl, {
+  const response = await fetch(endpoint, {
     headers: {
       "Content-Type": "application/json",
       ...headers,
