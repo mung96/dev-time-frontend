@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { LoginFormValues } from "@pages/auth/model/login-form-values.schema";
 import { apiRequester } from "@shared/api";
+import { useRouter } from "next/navigation";
 export const LoginPage = () => {
   const {
     register,
@@ -25,6 +26,8 @@ export const LoginPage = () => {
     resolver: zodResolver(LoginFormValues),
     mode: "onTouched",
   });
+
+  const router = useRouter();
 
   return (
     <div className="flex-1 flex justify-center w-full">
@@ -46,7 +49,9 @@ export const LoginPage = () => {
                 method: "POST",
                 body: JSON.stringify(data),
               });
-              console.log("client", response);
+              if (response.isFirstLogin) {
+                router.push(PATH.PROFILE_CREATE);
+              }
             })();
           }}
         >

@@ -5,4 +5,7 @@ export const PATH = {
   // auth
   LOGIN: "/login",
   SIGNUP: "/signup",
+
+  //member
+  PROFILE_CREATE: "/profile/new",
 };
