@@ -1,10 +1,8 @@
+import { setRefreshTokenCookie } from "./../../../src/shared/api/cookie";
 import { NextRequest, NextResponse } from "next/server";
 import { API_SERVER_URL } from "@shared/api";
-
-const ACCESS_TOKEN_STORAGE_KEY = "accessToken";
-const REFRESH_TOKEN_STORAGE_KEY = "refreshToken";
-const ACCESS_TOKEN_MAX_AGE = 60 * 60; //1시간
-const REFRESH_TOKEN_MAX_AGE = 10 * 24 * 60 * 60; //10일
+import { setAccessTokenCookie } from "@shared/api/cookie";
+import { cookies } from "next/headers";
 
 export async function POST(req: NextRequest) {
   const payload = await req.json();
@@ -23,18 +21,9 @@ export async function POST(req: NextRequest) {
   const { accessToken, refreshToken, ...loginInfo } = await response.json();
   const res = NextResponse.json({ ...loginInfo });
 
-  res.cookies.set(ACCESS_TOKEN_STORAGE_KEY, accessToken, {
-    httpOnly: true,
-    secure: true,
-    path: "/",
-    maxAge: ACCESS_TOKEN_MAX_AGE,
-  });
+  const cookieStore = await cookies();
+  setAccessTokenCookie(cookieStore, accessToken);
+  setRefreshTokenCookie(cookieStore, refreshToken);
 
-  res.cookies.set(REFRESH_TOKEN_STORAGE_KEY, refreshToken, {
-    httpOnly: true,
-    secure: true,
-    path: "/",
-    maxAge: REFRESH_TOKEN_MAX_AGE,
-  });
   return res;
 }
