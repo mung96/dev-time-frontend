@@ -1,3 +1,5 @@
+import { LoginPage } from "@pages/auth/ui/login-page";
+
 export default function Page() {
-  return <div>로그인</div>;
+  return <LoginPage />;
 }
