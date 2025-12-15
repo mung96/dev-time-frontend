@@ -1,5 +1,7 @@
 "use client";
+import { PATH } from "@shared/routes";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const TimerPage = () => {
@@ -14,6 +16,7 @@ export const TimerPage = () => {
     if (time < 10) return "0" + time.toString();
     return time.toString();
   };
+  const router = useRouter();
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
       <section className="flex flex-col gap-20 items-center">
@@ -60,28 +63,18 @@ export const TimerPage = () => {
         </div>
 
         <div className="flex gap-20">
-          <button className="w-25 h-25">
-            <Image
-              width={100}
-              height={100}
-              src="/icons/start.svg"
-              alt="DevTime 로고"
-            />
+          <button className="w-25 h-25" onClick={() => router.push(PATH.TODO)}>
+            <Image width={100} height={100} src="/icons/start.svg" alt="시작" />
           </button>
           <button className="w-25 h-25">
-            <Image
-              width={100}
-              height={100}
-              src="/icons/pause.svg"
-              alt="DevTime 로고"
-            />
+            <Image width={100} height={100} src="/icons/pause.svg" alt="정지" />
           </button>
           <button className="w-25 h-25">
             <Image
               width={100}
               height={100}
               src="/icons/finish.svg"
-              alt="DevTime 로고"
+              alt="끝내기"
             />
           </button>
         </div>
@@ -91,16 +84,11 @@ export const TimerPage = () => {
               width={48}
               height={48}
               src="/icons/TODO.svg"
-              alt="DevTime 로고"
+              alt="todo 목록"
             />
           </button>
           <button className="w-25 h-25">
-            <Image
-              width={48}
-              height={48}
-              src="/icons/reset.svg"
-              alt="DevTime 로고"
-            />
+            <Image width={48} height={48} src="/icons/reset.svg" alt="초기화" />
           </button>
         </div>
       </section>
