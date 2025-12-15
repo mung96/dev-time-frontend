@@ -7,7 +7,7 @@ export const LoginFailModal = () => {
 
   if (!isOpen) return null;
   return (
-    <Dialog>
+    <Dialog size="sm">
       <div className="flex flex-col gap-6">
         <p className="text-gray-800 text-title font-semibold">
           로그인 정보를 다시 확인해 주세요
