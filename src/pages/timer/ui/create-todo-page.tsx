@@ -1,7 +1,10 @@
 "use client";
+import { DevTool } from "@hookform/devtools";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createNewTodoFormValues,
+  TASK_CONTENT_MAX_LENGTH,
+  TODAY_GOAL_MAX_LENGTH,
   TodoFormValues,
 } from "@pages/timer/model/todo-form-values.schema";
 import { Button, Dialog, TextField } from "@shared/ui";
@@ -41,6 +44,7 @@ export const CreateTodoPage = () => {
           <input
             placeholder="오늘의 목표"
             className="w-full h-[46px] text-heading"
+            maxLength={TODAY_GOAL_MAX_LENGTH}
             {...register("todayGoal")}
           />
           <TextField
@@ -49,6 +53,7 @@ export const CreateTodoPage = () => {
             onChange={(e) => {
               setNewTaskContent(e.target.value);
             }}
+            maxLength={TASK_CONTENT_MAX_LENGTH}
             button={
               <TextFieldButton
                 type="button"
