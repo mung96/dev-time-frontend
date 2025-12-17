@@ -7,6 +7,7 @@ import {
   TODAY_GOAL_MAX_LENGTH,
   TodoFormValues,
 } from "@pages/timer/model/todo-form-values.schema";
+import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { Button, Dialog, TextField } from "@shared/ui";
 import { TextFieldButton } from "@shared/ui/text-field/text-field-button";
 import Image from "next/image";
@@ -38,19 +39,21 @@ export const CreateTodoPage = () => {
     control,
     name: "tasks",
   });
+
+  const { setTimerId } = useTimerStore();
   return (
     <Dialog size={"md"}>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit(async (data) => {
-            await createTimer({
+            const response = await createTimer({
               todayGoal: data.todayGoal,
               tasks: data.tasks.map((task) => task.content),
             });
+            setTimerId(response.timerId);
+            router.back();
           })();
-          //timerId 저장하기
-          router.back();
         }}
       >
         <fieldset className="flex flex-col gap-6">
