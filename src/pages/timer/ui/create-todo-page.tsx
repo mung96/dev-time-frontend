@@ -1,6 +1,6 @@
 "use client";
-import { DevTool } from "@hookform/devtools";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createTimer } from "@pages/timer/api/create-timer";
 import {
   createNewTodoFormValues,
   TASK_CONTENT_MAX_LENGTH,
@@ -21,6 +21,7 @@ export const CreateTodoPage = () => {
   const {
     control,
     register,
+    handleSubmit,
     formState: { isValid, isSubmitting },
   } = useForm<TodoFormValues>({
     resolver: zodResolver(TodoFormValues),
@@ -39,7 +40,19 @@ export const CreateTodoPage = () => {
   });
   return (
     <Dialog size={"md"}>
-      <form>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(async (data) => {
+            await createTimer({
+              todayGoal: data.todayGoal,
+              tasks: data.tasks.map((task) => task.content),
+            });
+          })();
+          //timerId 저장하기
+          router.back();
+        }}
+      >
         <fieldset className="flex flex-col gap-6">
           <input
             placeholder="오늘의 목표"
