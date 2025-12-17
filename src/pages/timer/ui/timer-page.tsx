@@ -1,15 +1,22 @@
 "use client";
+import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { PATH } from "@shared/routes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+const parseTime = (milliseconds: number) => {
+  const time = milliseconds / 1000;
+  const hours = Math.floor(time / 3600);
+  const minutes = Math.floor((time % 3600) / 60);
+  const seconds = Math.floor(time % 60);
+
+  return { hours, minutes, seconds };
+};
 export const TimerPage = () => {
-  const [time, setTime] = useState<{
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }>({ hours: 2, minutes: 39, seconds: 15 });
+  const [time, setTime] = useState(0);
+  const [startTime, setStartTime] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
 
   const title = "공부 시간 10시간 채우자 💪";
   const timeFormat = (time: number): string => {
@@ -17,6 +24,37 @@ export const TimerPage = () => {
     return time.toString();
   };
   const router = useRouter();
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const INTERVAL = 1000;
+
+    const updateTime = () => {
+      if (isRunning) {
+        const now = Date.now();
+        const diff = now - startTime;
+
+        setTime(diff);
+
+        const nextTick = -(diff % INTERVAL);
+        timer = setTimeout(updateTime, nextTick);
+      }
+    };
+
+    if (isRunning) {
+      timer = setTimeout(updateTime, INTERVAL);
+    }
+
+    return () => clearTimeout(timer);
+  });
+  const { timerId } = useTimerStore();
+  useEffect(() => {
+    if (!isRunning) {
+      setStartTime(Date.now() - time);
+      setIsRunning(true);
+    }
+  }, [timerId]);
+
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
       <section className="flex flex-col gap-20 items-center">
@@ -31,7 +69,9 @@ export const TimerPage = () => {
               background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
             }}
           >
-            <span className="text-9xl">{timeFormat(time.hours)}</span>
+            <span className="text-9xl">
+              {timeFormat(parseTime(time).hours)}
+            </span>
             <span className="text-primary text-label">H O U R S</span>
           </div>
           <div className="flex flex-col gap-16">
@@ -44,7 +84,9 @@ export const TimerPage = () => {
               background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
             }}
           >
-            <span className="text-9xl">{timeFormat(time.minutes)}</span>
+            <span className="text-9xl">
+              {timeFormat(parseTime(time).minutes)}
+            </span>
             <span className="text-primary text-label">M I N U T E S</span>
           </div>
           <div className="flex flex-col gap-16">
@@ -57,7 +99,9 @@ export const TimerPage = () => {
               background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
             }}
           >
-            <span className="text-9xl">{timeFormat(time.seconds)}</span>
+            <span className="text-9xl">
+              {timeFormat(parseTime(time).seconds)}
+            </span>
             <span className="text-primary text-label">S E C O N D S</span>
           </div>
         </div>
