@@ -1,4 +1,4 @@
-import { getAccessTokenFromCookie } from "@shared/api/cookie";
+import { cookieManager } from "@shared/api/cookie";
 import { PATH } from "@shared/routes";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
@@ -8,8 +8,7 @@ const publicRoutes = [PATH.HOME, PATH.LOGIN, PATH.SIGNUP];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const cookieStore = await cookies();
-  const accessToken = getAccessTokenFromCookie(cookieStore);
+  const accessToken = cookieManager.getAccessToken();
 
   //TODO: 토큰이 실제 유효한지 검증이 필요할 것 같음
 

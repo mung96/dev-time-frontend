@@ -1,8 +1,6 @@
-import { setRefreshTokenCookie } from "./../../../src/shared/api/cookie";
 import { NextRequest, NextResponse } from "next/server";
 import { API_SERVER_URL } from "@shared/api";
-import { setAccessTokenCookie } from "@shared/api/cookie";
-import { cookies } from "next/headers";
+import { cookieManager } from "@shared/api/cookie";
 
 export async function POST(req: NextRequest) {
   const payload = await req.json();
@@ -22,9 +20,8 @@ export async function POST(req: NextRequest) {
   const res = NextResponse.json({ ...loginInfo });
 
   // 토큰을 쿠키에 세팅
-  const cookieStore = await cookies();
-  setAccessTokenCookie(cookieStore, accessToken);
-  setRefreshTokenCookie(cookieStore, refreshToken);
+  await cookieManager.setAccessToken(accessToken);
+  await cookieManager.setRefreshToken(refreshToken);
 
   return res;
 }
