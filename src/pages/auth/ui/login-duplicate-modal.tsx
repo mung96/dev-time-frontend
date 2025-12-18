@@ -7,7 +7,7 @@ export const LoginDuplicateModal = () => {
 
   if (!isOpen) return null;
   return (
-    <Dialog>
+    <Dialog size="sm">
       <div className="flex flex-col gap-6">
         <p className="text-gray-800 text-title font-semibold">
           중복 로그인이 불가능합니다.

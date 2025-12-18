@@ -15,5 +15,6 @@ export const PATH = {
   PROFILE_CREATE: "/profile/new",
 
   //타이머
-  TIMER: "/timer",
+  TIMER: "/",
+  TODO: "/todo",
 };

@@ -1,12 +1,15 @@
+"use client";
+
 import { cn } from "@shared/lib/style";
 import { ReactNode, useEffect, useRef } from "react";
 
 export interface DialogProps {
   children: ReactNode;
   className?: string;
+  size: "sm" | "md";
 }
 
-export const Dialog = ({ children, className }: DialogProps) => {
+export const Dialog = ({ children, size, className }: DialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -23,7 +26,9 @@ export const Dialog = ({ children, className }: DialogProps) => {
   return (
     <dialog
       className={cn(
-        `bg-white p-6 rounded backdrop:bg-grey-black/50 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`,
+        `bg-white px-6 rounded backdrop:bg-grey-black/50 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`,
+        size === "sm" && "py-6",
+        size === "md" && "pt-8 pb-6",
         className
       )}
       ref={dialogRef}
