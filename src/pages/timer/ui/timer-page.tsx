@@ -1,7 +1,10 @@
 "use client";
+import { timerQueries } from "@pages/timer/api/timer.query";
 import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { PATH } from "@shared/routes";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,15 +16,17 @@ const parseTime = (milliseconds: number) => {
 
   return { hours, minutes, seconds };
 };
+const timeFormat = (time: number): string => {
+  if (time < 10) return "0" + time.toString();
+  return time.toString();
+};
+
 export const TimerPage = () => {
   const [time, setTime] = useState(0); //밀리세컨드
   const { timerId } = useTimerStore();
+
+  const { data: timer } = useQuery(timerQueries.detail());
   const title = "공부 시간 10시간 채우자 💪"; //TODO: API 요청으로 변경
-  const timeFormat = (time: number): string => {
-    if (time < 10) return "0" + time.toString();
-    return time.toString();
-  };
-  const router = useRouter();
 
   useEffect(() => {
     if (!timerId) return;
@@ -96,9 +101,9 @@ export const TimerPage = () => {
         </div>
 
         <div className="flex gap-20">
-          <button className="w-25 h-25" onClick={() => router.push(PATH.TODO)}>
+          <Link className="w-25 h-25" href={PATH.TODO}>
             <Image width={100} height={100} src="/icons/start.svg" alt="시작" />
-          </button>
+          </Link>
           <button className="w-25 h-25">
             <Image width={100} height={100} src="/icons/pause.svg" alt="정지" />
           </button>
