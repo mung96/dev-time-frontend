@@ -14,11 +14,9 @@ const parseTime = (milliseconds: number) => {
   return { hours, minutes, seconds };
 };
 export const TimerPage = () => {
-  const [time, setTime] = useState(0);
-  const [startTime, setStartTime] = useState(0);
-  const [isRunning, setIsRunning] = useState(false);
-
-  const title = "공부 시간 10시간 채우자 💪";
+  const [time, setTime] = useState(0); //밀리세컨드
+  const { timerId } = useTimerStore();
+  const title = "공부 시간 10시간 채우자 💪"; //TODO: API 요청으로 변경
   const timeFormat = (time: number): string => {
     if (time < 10) return "0" + time.toString();
     return time.toString();
@@ -26,33 +24,24 @@ export const TimerPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    if (!timerId) return;
     let timer: ReturnType<typeof setTimeout>;
     const INTERVAL = 1000;
+    const startTime = Date.now() - time;
 
     const updateTime = () => {
-      if (isRunning) {
-        const now = Date.now();
-        const diff = now - startTime;
+      const now = Date.now();
+      const diff = now - startTime;
 
-        setTime(diff);
+      setTime(diff);
 
-        const nextTick = -(diff % INTERVAL);
-        timer = setTimeout(updateTime, nextTick);
-      }
+      const nextTick = -(diff % INTERVAL);
+      timer = setTimeout(updateTime, nextTick);
     };
 
-    if (isRunning) {
-      timer = setTimeout(updateTime, INTERVAL);
-    }
+    timer = setTimeout(updateTime, INTERVAL);
 
     return () => clearTimeout(timer);
-  });
-  const { timerId } = useTimerStore();
-  useEffect(() => {
-    if (!isRunning) {
-      setStartTime(Date.now() - time);
-      setIsRunning(true);
-    }
   }, [timerId]);
 
   return (
