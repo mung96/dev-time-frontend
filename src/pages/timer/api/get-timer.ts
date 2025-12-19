@@ -1,3 +1,4 @@
+import { Timer } from "@entities/timers";
 import { apiRequester } from "@shared/api/api-requester";
 import z from "zod";
 
@@ -15,16 +16,11 @@ export const getTimer = async () => {
 };
 
 export const TimerResponse = z.object({
-  timerId: z.string(),
+  timerId: Timer.shape.timerId,
   studyLogId: z.string(),
-  splitTimes: z.array(
-    z.object({
-      date: z.iso.datetime(),
-      timeSpent: z.number(),
-    })
-  ),
-  startTime: z.iso.datetime(),
-  lastUpdateTime: z.iso.datetime(),
+  splitTimes: Timer.shape.splitTimes,
+  startTime: Timer.shape.startTime,
+  lastUpdateTime: Timer.shape.lastUpdateTime,
 });
 
 export type TimerResponse = z.infer<typeof TimerResponse>;

@@ -15,7 +15,7 @@ export const getStudyLogDetail = async (studyLogId: string) => {
   // if (!result.success) {
   //   throw new Error("공부기록 응답 데이터 형식이 올바르지 않습니다.");
   // }
-  return response.data;
+  return response;
 };
 export const StudyLogDetailResponse = z.object({
   id: z.string(),
