@@ -1,11 +1,11 @@
 "use client";
+import { studyLogQueries } from "@pages/timer/api/study-log.query";
 import { timerQueries } from "@pages/timer/api/timer.query";
 import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const parseTime = (milliseconds: number) => {
@@ -26,8 +26,11 @@ export const TimerPage = () => {
   const { timerId } = useTimerStore();
 
   const { data: timer } = useQuery(timerQueries.detail());
-  const title = "공부 시간 10시간 채우자 💪"; //TODO: API 요청으로 변경
-
+  const { data: studyLogDetail } = useQuery({
+    ...studyLogQueries.detail(timer?.studyLogId || ""),
+    enabled: !!timer?.studyLogId,
+  });
+  const title = studyLogDetail?.todayGoal;
   useEffect(() => {
     if (!timerId) return;
     let timer: ReturnType<typeof setTimeout>;
