@@ -1,25 +1,13 @@
 "use client";
 import { studyLogQueries } from "@pages/timer/api/study-log.query";
 import { timerQueries } from "@pages/timer/api/timer.query";
+import { parseTime, timeFormat } from "../lib";
 import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-const parseTime = (milliseconds: number) => {
-  const time = milliseconds / 1000;
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = Math.floor(time % 60);
-
-  return { hours, minutes, seconds };
-};
-const timeFormat = (time: number): string => {
-  if (time < 10) return "0" + time.toString();
-  return time.toString();
-};
 
 export const TimerPage = () => {
   const [time, setTime] = useState(0); //밀리세컨드
