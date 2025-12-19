@@ -9,6 +9,5 @@ export const timerQueries = {
     queryOptions({
       queryKey: [...timerQueries.details()],
       queryFn: () => getTimer(),
-      staleTime: 5000,
     }),
 };
