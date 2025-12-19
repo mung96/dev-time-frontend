@@ -11,7 +11,7 @@ export const getTimer = async () => {
   // if (!result.success) {
   //   throw new Error("타이머 응답 데이터 형식이 올바르지 않습니다.");
   // }
-  return response.data;
+  return response;
 };
 
 export const TimerResponse = z.object({

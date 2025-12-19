@@ -25,17 +25,18 @@ export const TimerPage = () => {
   const [time, setTime] = useState(0); //밀리세컨드
   const { timerId } = useTimerStore();
 
-  const { data: timer } = useQuery(timerQueries.detail());
+  // console.log("부모 렌더링");
+  const { data: timerDetail } = useQuery(timerQueries.detail());
   const { data: studyLogDetail } = useQuery({
-    ...studyLogQueries.detail(timer?.studyLogId || ""),
-    enabled: !!timer?.studyLogId,
+    ...studyLogQueries.detail(timerDetail?.studyLogId || ""),
+    enabled: !!timerDetail?.studyLogId,
   });
   const title = studyLogDetail?.todayGoal;
   useEffect(() => {
-    if (!timerId) return;
+    if (!timerId || !timerDetail?.lastUpdateTime) return;
     let timer: ReturnType<typeof setTimeout>;
     const INTERVAL = 1000;
-    const startTime = Date.now() - time;
+    const startTime = new Date(timerDetail.lastUpdateTime).getTime();
 
     const updateTime = () => {
       const now = Date.now();
@@ -50,7 +51,7 @@ export const TimerPage = () => {
     timer = setTimeout(updateTime, INTERVAL);
 
     return () => clearTimeout(timer);
-  }, [timerId]);
+  }, [timerId, timerDetail]);
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
@@ -132,7 +133,13 @@ export const TimerPage = () => {
             <Image width={48} height={48} src="/icons/reset.svg" alt="초기화" />
           </button>
         </div>
+        <Child />
       </section>
     </main>
   );
+};
+
+const Child = () => {
+  // console.log("자식 렌더링");
+  return <p>렌더링이 되는지 체크합니다.</p>;
 };
