@@ -1,12 +1,11 @@
 import { cookieManager } from "@shared/api/cookie";
 import { PATH } from "@shared/routes";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 const publicRoutes = [PATH.HOME, PATH.LOGIN, PATH.SIGNUP];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const accessToken = cookieManager.getAccessToken();
 

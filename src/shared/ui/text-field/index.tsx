@@ -18,7 +18,6 @@ export const TextField = ({
   className,
   ...inputProps
 }: TextFieldProps) => {
-  console.log(button);
   return (
     <div className={clsx("flex flex-col gap-[8px] h-[94px]", className)}>
       <label className="text-small font-medium text-gray-600">{label}</label>

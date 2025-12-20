@@ -1,33 +1,30 @@
 "use client";
+import { studyLogQueries } from "@pages/timer/api/study-log.query";
+import { timerQueries } from "@pages/timer/api/timer.query";
+import { parseTime, timeFormat } from "../lib";
 import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { PATH } from "@shared/routes";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const parseTime = (milliseconds: number) => {
-  const time = milliseconds / 1000;
-  const hours = Math.floor(time / 3600);
-  const minutes = Math.floor((time % 3600) / 60);
-  const seconds = Math.floor(time % 60);
-
-  return { hours, minutes, seconds };
-};
 export const TimerPage = () => {
   const [time, setTime] = useState(0); //밀리세컨드
   const { timerId } = useTimerStore();
-  const title = "공부 시간 10시간 채우자 💪"; //TODO: API 요청으로 변경
-  const timeFormat = (time: number): string => {
-    if (time < 10) return "0" + time.toString();
-    return time.toString();
-  };
-  const router = useRouter();
 
+  // console.log("부모 렌더링");
+  const { data: timerDetail } = useQuery(timerQueries.detail());
+  const { data: studyLogDetail } = useQuery({
+    ...studyLogQueries.detail(timerDetail?.studyLogId || ""),
+    enabled: !!timerDetail?.studyLogId,
+  });
+  const title = studyLogDetail?.todayGoal;
   useEffect(() => {
-    if (!timerId) return;
+    if (!timerId || !timerDetail?.lastUpdateTime) return;
     let timer: ReturnType<typeof setTimeout>;
     const INTERVAL = 1000;
-    const startTime = Date.now() - time;
+    const startTime = new Date(timerDetail.lastUpdateTime).getTime();
 
     const updateTime = () => {
       const now = Date.now();
@@ -42,7 +39,7 @@ export const TimerPage = () => {
     timer = setTimeout(updateTime, INTERVAL);
 
     return () => clearTimeout(timer);
-  }, [timerId]);
+  }, [timerId, timerDetail]);
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
@@ -96,9 +93,9 @@ export const TimerPage = () => {
         </div>
 
         <div className="flex gap-20">
-          <button className="w-25 h-25" onClick={() => router.push(PATH.TODO)}>
+          <Link className="w-25 h-25" href={PATH.TODO}>
             <Image width={100} height={100} src="/icons/start.svg" alt="시작" />
-          </button>
+          </Link>
           <button className="w-25 h-25">
             <Image width={100} height={100} src="/icons/pause.svg" alt="정지" />
           </button>
@@ -124,7 +121,13 @@ export const TimerPage = () => {
             <Image width={48} height={48} src="/icons/reset.svg" alt="초기화" />
           </button>
         </div>
+        <Child />
       </section>
     </main>
   );
+};
+
+const Child = () => {
+  // console.log("자식 렌더링");
+  return <p>렌더링이 되는지 체크합니다.</p>;
 };
