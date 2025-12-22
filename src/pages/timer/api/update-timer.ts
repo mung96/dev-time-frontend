@@ -2,9 +2,15 @@ import { Timer } from "@entities/timers";
 import { apiRequester } from "@shared/api/api-requester";
 import z from "zod";
 
-export const updateTimer = (payload: UpdateTimerPayload) => {
+export const updateTimer = ({
+  timerId,
+  payload,
+}: {
+  timerId: string;
+  payload: UpdateTimerPayload;
+}) => {
   return apiRequester<UpdateTimerResponse & { message: string }>(
-    `/api/internal/timers`,
+    `/api/internal/timers/${timerId}`,
     {
       method: "PUT",
       body: JSON.stringify(payload),
@@ -19,7 +25,7 @@ export const UpdateTimerResponse = z.object({
 });
 type UpdateTimerResponse = z.infer<typeof UpdateTimerResponse>;
 
-const UpdateTimerPayload = z.object({
+export const UpdateTimerPayload = z.object({
   splitTimes: Timer.shape.splitTimes,
 });
-type UpdateTimerPayload = z.infer<typeof UpdateTimerPayload>;
+export type UpdateTimerPayload = z.infer<typeof UpdateTimerPayload>;
