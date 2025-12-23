@@ -1,45 +1,65 @@
 "use client";
 import { studyLogQueries } from "@pages/timer/api/study-log.query";
 import { timerQueries } from "@pages/timer/api/timer.query";
-import { parseTime, timeFormat } from "../lib";
-import { useTimerStore } from "@pages/timer/model/use-timer-store";
+import { getSplitTime, parseTime, timeFormat } from "../lib";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useUpdateTimer } from "@pages/timer/api/use-update-timer";
 
 export const TimerPage = () => {
-  const [time, setTime] = useState(0); //밀리세컨드
-  const { timerId } = useTimerStore();
+  const [time, setTime] = useState(0); //밀리세컨드 =>TODO: 이걸 전역에서 관리해야하네
 
-  // console.log("부모 렌더링");
   const { data: timerDetail } = useQuery(timerQueries.detail());
   const { data: studyLogDetail } = useQuery({
     ...studyLogQueries.detail(timerDetail?.studyLogId || ""),
     enabled: !!timerDetail?.studyLogId,
   });
   const title = studyLogDetail?.todayGoal;
-  useEffect(() => {
-    if (!timerId || !timerDetail?.lastUpdateTime) return;
-    let timer: ReturnType<typeof setTimeout>;
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(null); //이건 렌더링용
+  const removeTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+  const { mutate: updateTimer } = useUpdateTimer();
+
+  const startTimer = () => {
+    if (!timerDetail?.timerId || !timerDetail?.lastUpdateTime) return;
+
     const INTERVAL = 1000;
     const startTime = new Date(timerDetail.lastUpdateTime).getTime();
-
     const updateTime = () => {
       const now = Date.now();
       const diff = now - startTime;
-
       setTime(diff);
 
       const nextTick = -(diff % INTERVAL);
-      timer = setTimeout(updateTime, nextTick);
+      timerRef.current = setTimeout(updateTime, nextTick);
     };
 
-    timer = setTimeout(updateTime, INTERVAL);
+    timerRef.current = setTimeout(updateTime, INTERVAL);
+  };
 
-    return () => clearTimeout(timer);
-  }, [timerId, timerDetail]);
+  const pauseTimer = () => {
+    removeTimer();
+    updateTimer({
+      timerId: timerDetail?.timerId || "",
+      payload: {
+        splitTimes: getSplitTime(new Date(timerDetail?.lastUpdateTime || "")),
+      },
+    });
+  };
+
+  useEffect(() => {
+    startTimer();
+    return () => {
+      removeTimer();
+    };
+  }, [timerDetail]);
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
@@ -96,7 +116,7 @@ export const TimerPage = () => {
           <Link className="w-25 h-25" href={PATH.TODO}>
             <Image width={100} height={100} src="/icons/start.svg" alt="시작" />
           </Link>
-          <button className="w-25 h-25">
+          <button className="w-25 h-25" onClick={() => pauseTimer()}>
             <Image width={100} height={100} src="/icons/pause.svg" alt="정지" />
           </button>
           <button className="w-25 h-25">
@@ -121,13 +141,7 @@ export const TimerPage = () => {
             <Image width={48} height={48} src="/icons/reset.svg" alt="초기화" />
           </button>
         </div>
-        <Child />
       </section>
     </main>
   );
-};
-
-const Child = () => {
-  // console.log("자식 렌더링");
-  return <p>렌더링이 되는지 체크합니다.</p>;
 };
