@@ -5,9 +5,9 @@ import { getSplitTime, parseTime, timeFormat } from "../lib";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useUpdateTimer } from "@pages/timer/api/use-update-timer";
+import { useRouter } from "next/navigation";
 
 export const TimerPage = () => {
   const [time, setTime] = useState(0); //밀리세컨드 =>TODO: 이걸 전역에서 관리해야하네
@@ -26,18 +26,24 @@ export const TimerPage = () => {
     }
   };
   const { mutate: updateTimer } = useUpdateTimer();
+  const router = useRouter();
 
   const startTimer = () => {
-    if (!timerDetail?.timerId || !timerDetail?.lastUpdateTime) return;
+    if (!timerDetail) {
+      router.push(PATH.TODO);
+      return;
+    }
 
     const INTERVAL = 1000;
-    const startTime = new Date(timerDetail.lastUpdateTime).getTime();
+
+    const startTime = Date.now();
     const updateTime = () => {
       const now = Date.now();
       const diff = now - startTime;
-      setTime(diff);
+      setTime(time + diff);
 
-      const nextTick = -(diff % INTERVAL);
+      // 다음 정확한 1초 시점까지 남은 시간 계산
+      const nextTick = INTERVAL - (diff % INTERVAL);
       timerRef.current = setTimeout(updateTime, nextTick);
     };
 
@@ -53,13 +59,6 @@ export const TimerPage = () => {
       },
     });
   };
-
-  useEffect(() => {
-    startTimer();
-    return () => {
-      removeTimer();
-    };
-  }, [timerDetail]);
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
@@ -113,9 +112,9 @@ export const TimerPage = () => {
         </div>
 
         <div className="flex gap-20">
-          <Link className="w-25 h-25" href={PATH.TODO}>
+          <button className="w-25 h-25" onClick={() => startTimer()}>
             <Image width={100} height={100} src="/icons/start.svg" alt="시작" />
-          </Link>
+          </button>
           <button className="w-25 h-25" onClick={() => pauseTimer()}>
             <Image width={100} height={100} src="/icons/pause.svg" alt="정지" />
           </button>

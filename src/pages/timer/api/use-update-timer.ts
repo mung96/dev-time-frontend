@@ -7,7 +7,7 @@ export const useUpdateTimer = () => {
   return useMutation({
     mutationFn: updateTimerApi,
     onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: timerQueries.details() });
+      queryClient.invalidateQueries({ queryKey: timerQueries.details() });
     },
   });
 };
