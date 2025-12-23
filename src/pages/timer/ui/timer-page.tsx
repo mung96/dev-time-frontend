@@ -1,45 +1,64 @@
 "use client";
 import { studyLogQueries } from "@pages/timer/api/study-log.query";
 import { timerQueries } from "@pages/timer/api/timer.query";
-import { parseTime, timeFormat } from "../lib";
-import { useTimerStore } from "@pages/timer/model/use-timer-store";
+import { getSplitTime, parseTime, timeFormat } from "../lib";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
+import { useUpdateTimer } from "@pages/timer/api/use-update-timer";
+import { useRouter } from "next/navigation";
 
 export const TimerPage = () => {
-  const [time, setTime] = useState(0); //밀리세컨드
-  const { timerId } = useTimerStore();
+  const [time, setTime] = useState(0); //밀리세컨드 =>TODO: 이걸 전역에서 관리해야하네
 
-  // console.log("부모 렌더링");
   const { data: timerDetail } = useQuery(timerQueries.detail());
   const { data: studyLogDetail } = useQuery({
     ...studyLogQueries.detail(timerDetail?.studyLogId || ""),
     enabled: !!timerDetail?.studyLogId,
   });
   const title = studyLogDetail?.todayGoal;
-  useEffect(() => {
-    if (!timerId || !timerDetail?.lastUpdateTime) return;
-    let timer: ReturnType<typeof setTimeout>;
-    const INTERVAL = 1000;
-    const startTime = new Date(timerDetail.lastUpdateTime).getTime();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(null); //이건 렌더링용
+  const removeTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+  const { mutate: updateTimer } = useUpdateTimer();
+  const router = useRouter();
 
+  const startTimer = () => {
+    if (!timerDetail) {
+      router.push(PATH.TODO);
+      return;
+    }
+
+    const INTERVAL = 1000;
+
+    const startTime = Date.now();
     const updateTime = () => {
       const now = Date.now();
       const diff = now - startTime;
+      setTime(time + diff);
 
-      setTime(diff);
-
-      const nextTick = -(diff % INTERVAL);
-      timer = setTimeout(updateTime, nextTick);
+      // 다음 정확한 1초 시점까지 남은 시간 계산
+      const nextTick = INTERVAL - (diff % INTERVAL);
+      timerRef.current = setTimeout(updateTime, nextTick);
     };
 
-    timer = setTimeout(updateTime, INTERVAL);
+    timerRef.current = setTimeout(updateTime, INTERVAL);
+  };
 
-    return () => clearTimeout(timer);
-  }, [timerId, timerDetail]);
+  const pauseTimer = () => {
+    removeTimer();
+    updateTimer({
+      timerId: timerDetail?.timerId || "",
+      payload: {
+        splitTimes: getSplitTime(new Date(timerDetail?.lastUpdateTime || "")),
+      },
+    });
+  };
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
@@ -93,10 +112,10 @@ export const TimerPage = () => {
         </div>
 
         <div className="flex gap-20">
-          <Link className="w-25 h-25" href={PATH.TODO}>
+          <button className="w-25 h-25" onClick={() => startTimer()}>
             <Image width={100} height={100} src="/icons/start.svg" alt="시작" />
-          </Link>
-          <button className="w-25 h-25">
+          </button>
+          <button className="w-25 h-25" onClick={() => pauseTimer()}>
             <Image width={100} height={100} src="/icons/pause.svg" alt="정지" />
           </button>
           <button className="w-25 h-25">
@@ -121,13 +140,7 @@ export const TimerPage = () => {
             <Image width={48} height={48} src="/icons/reset.svg" alt="초기화" />
           </button>
         </div>
-        <Child />
       </section>
     </main>
   );
-};
-
-const Child = () => {
-  // console.log("자식 렌더링");
-  return <p>렌더링이 되는지 체크합니다.</p>;
 };
