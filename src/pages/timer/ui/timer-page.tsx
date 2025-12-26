@@ -16,46 +16,15 @@ export const TimerPage = () => {
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
       <section className="flex flex-col gap-20 items-center">
-        {/* TODO: color 디자인시스템 분리 필요 */}
         <p className="text-[#023E99] text-heading font-bold text-[72px]">
           {title}
         </p>
         <div className="flex gap-12 items-center">
-          <div
-            className="w-66 h-[298px] border border-primary flex flex-col items-center justify-center gap-6 rounded-lg"
-            style={{
-              background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
-            }}
-          >
-            <span className="text-9xl">{elapsedTime.hours}</span>
-            <span className="text-primary text-label">H O U R S</span>
-          </div>
-          <div className="flex flex-col gap-16">
-            <div className="w-6 h-6 rounded-full bg-primary" />
-            <div className="w-6 h-6 rounded-full bg-primary" />
-          </div>
-          <div
-            className="w-66 h-[298px] border border-primary flex flex-col items-center justify-center gap-6 rounded-lg"
-            style={{
-              background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
-            }}
-          >
-            <span className="text-9xl">{elapsedTime.minutes}</span>
-            <span className="text-primary text-label">M I N U T E S</span>
-          </div>
-          <div className="flex flex-col gap-16">
-            <div className="w-6 h-6 rounded-full bg-primary" />
-            <div className="w-6 h-6 rounded-full bg-primary" />
-          </div>
-          <div
-            className="w-66 h-[298px] border border-primary flex flex-col items-center justify-center gap-6 rounded-lg"
-            style={{
-              background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
-            }}
-          >
-            <span className="text-9xl">{elapsedTime.seconds}</span>
-            <span className="text-primary text-label">S E C O N D S</span>
-          </div>
+          <TimeCard value={elapsedTime.hours} unit={"H O U R S"} />
+          <TimeSeparator />
+          <TimeCard value={elapsedTime.minutes} unit={"M I N U T E S"} />
+          <TimeSeparator />
+          <TimeCard value={elapsedTime.seconds} unit={"S E C O N D S"} />
         </div>
 
         <div className="flex gap-20">
@@ -89,5 +58,28 @@ export const TimerPage = () => {
         </div>
       </section>
     </main>
+  );
+};
+
+const TimeCard = ({ value, unit }: { value: string; unit: string }) => {
+  return (
+    <div
+      className="w-66 h-[298px] border border-primary flex flex-col items-center justify-center gap-6 rounded-lg"
+      style={{
+        background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
+      }}
+    >
+      <span className="text-9xl">{value}</span>
+      <span className="text-primary text-label">{unit}</span>
+    </div>
+  );
+};
+
+const TimeSeparator = () => {
+  return (
+    <div className="flex flex-col gap-16">
+      <div className="w-6 h-6 rounded-full bg-primary" />
+      <div className="w-6 h-6 rounded-full bg-primary" />
+    </div>
   );
 };
