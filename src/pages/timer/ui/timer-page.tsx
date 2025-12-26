@@ -1,64 +1,20 @@
 "use client";
 import { studyLogQueries } from "@pages/timer/api/study-log.query";
-import { timerQueries } from "@pages/timer/api/timer.query";
-import { getSplitTime, parseTime, timeFormat } from "../lib";
-import { PATH } from "@shared/routes";
+import { parseTime, timeFormat } from "@pages/timer/lib";
+import { useTimer } from "@pages/timer/model/use-timer";
+
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useRef, useState } from "react";
-import { useUpdateTimer } from "@pages/timer/api/use-update-timer";
-import { useRouter } from "next/navigation";
 
 export const TimerPage = () => {
-  const [time, setTime] = useState(0); //밀리세컨드 =>TODO: 이걸 전역에서 관리해야하네
+  const { time, startTimer, pauseTimer, studyLogId } = useTimer();
 
-  const { data: timerDetail } = useQuery(timerQueries.detail());
   const { data: studyLogDetail } = useQuery({
-    ...studyLogQueries.detail(timerDetail?.studyLogId || ""),
-    enabled: !!timerDetail?.studyLogId,
+    ...studyLogQueries.detail(studyLogId || ""),
+    enabled: !!studyLogId,
   });
+
   const title = studyLogDetail?.todayGoal;
-  const timerRef = useRef<ReturnType<typeof setTimeout>>(null); //이건 렌더링용
-  const removeTimer = () => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  };
-  const { mutate: updateTimer } = useUpdateTimer();
-  const router = useRouter();
-
-  const startTimer = () => {
-    if (!timerDetail) {
-      router.push(PATH.TODO);
-      return;
-    }
-
-    const INTERVAL = 1000;
-
-    const startTime = Date.now();
-    const updateTime = () => {
-      const now = Date.now();
-      const diff = now - startTime;
-      setTime(time + diff);
-
-      // 다음 정확한 1초 시점까지 남은 시간 계산
-      const nextTick = INTERVAL - (diff % INTERVAL);
-      timerRef.current = setTimeout(updateTime, nextTick);
-    };
-
-    timerRef.current = setTimeout(updateTime, INTERVAL);
-  };
-
-  const pauseTimer = () => {
-    removeTimer();
-    updateTimer({
-      timerId: timerDetail?.timerId || "",
-      payload: {
-        splitTimes: getSplitTime(new Date(timerDetail?.lastUpdateTime || "")),
-      },
-    });
-  };
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
