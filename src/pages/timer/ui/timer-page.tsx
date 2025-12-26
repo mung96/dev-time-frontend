@@ -9,10 +9,9 @@ import Image from "next/image";
 export const TimerPage = () => {
   const { time, startTimer, pauseTimer, studyLogId } = useTimer();
 
-  const { data: studyLogDetail } = useQuery({
-    ...studyLogQueries.detail(studyLogId || ""),
-    enabled: !!studyLogId,
-  });
+  const { data: studyLogDetail } = useQuery(
+    studyLogQueries.detail(studyLogId || "")
+  );
 
   const title = studyLogDetail?.todayGoal;
 

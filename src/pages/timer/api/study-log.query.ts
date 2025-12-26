@@ -13,5 +13,6 @@ export const studyLogQueries = {
     queryOptions({
       queryKey: [...studyLogQueries.details(studyLogId)],
       queryFn: () => getStudyLogDetail(studyLogId),
+      enabled: !!studyLogId,
     }),
 };
