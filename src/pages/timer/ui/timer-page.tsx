@@ -1,23 +1,18 @@
 "use client";
-import { studyLogQueries } from "@pages/timer/api/study-log.query";
+import { useStudyLog } from "@pages/timer/model/use-study-log";
 import { useTimer } from "@pages/timer/model/use-timer";
 
-import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
 export const TimerPage = () => {
   const { elapsedTime, startTimer, pauseTimer, studyLogId } = useTimer();
-
-  const { data: studyLogDetail } = useQuery(
-    studyLogQueries.detail(studyLogId || "")
-  );
-  const title = studyLogDetail?.todayGoal;
+  const { studyLogDetail } = useStudyLog({ studyLogId: studyLogId || "" });
 
   return (
     <main className="w-full h-full flex flex-col items-center justify-center">
       <section className="flex flex-col gap-20 items-center">
         <p className="text-[#023E99] text-heading font-bold text-[72px]">
-          {title}
+          {studyLogDetail?.todayGoal}
         </p>
         <div className="flex gap-12 items-center">
           <TimeCard value={elapsedTime.hours} unit={"H O U R S"} />
