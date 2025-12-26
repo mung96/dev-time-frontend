@@ -1,6 +1,6 @@
 "use client";
 import { studyLogQueries } from "@pages/timer/api/study-log.query";
-import { parseTime, timeFormat } from "@pages/timer/lib";
+import { convertMsToHMS, padZero } from "@pages/timer/lib/time";
 import { useTimer } from "@pages/timer/model/use-timer";
 
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +12,6 @@ export const TimerPage = () => {
   const { data: studyLogDetail } = useQuery(
     studyLogQueries.detail(studyLogId || "")
   );
-
   const title = studyLogDetail?.todayGoal;
 
   return (
@@ -30,7 +29,7 @@ export const TimerPage = () => {
             }}
           >
             <span className="text-9xl">
-              {timeFormat(parseTime(time).hours)}
+              {padZero(convertMsToHMS(time).hours)}
             </span>
             <span className="text-primary text-label">H O U R S</span>
           </div>
@@ -45,7 +44,7 @@ export const TimerPage = () => {
             }}
           >
             <span className="text-9xl">
-              {timeFormat(parseTime(time).minutes)}
+              {padZero(convertMsToHMS(time).minutes)}
             </span>
             <span className="text-primary text-label">M I N U T E S</span>
           </div>
@@ -60,7 +59,7 @@ export const TimerPage = () => {
             }}
           >
             <span className="text-9xl">
-              {timeFormat(parseTime(time).seconds)}
+              {padZero(convertMsToHMS(time).seconds)}
             </span>
             <span className="text-primary text-label">S E C O N D S</span>
           </div>

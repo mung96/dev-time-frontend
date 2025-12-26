@@ -1,6 +1,6 @@
 import { timerQueries } from "@pages/timer/api/timer.query";
 import { useUpdateTimer } from "@pages/timer/api/use-update-timer";
-import { getSplitTime } from "@pages/timer/lib";
+import { getSplitTime } from "@pages/timer/lib/time";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
