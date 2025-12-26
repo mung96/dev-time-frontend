@@ -1,13 +1,12 @@
 "use client";
 import { studyLogQueries } from "@pages/timer/api/study-log.query";
-import { convertMsToHMS, padZero } from "@pages/timer/lib/time";
 import { useTimer } from "@pages/timer/model/use-timer";
 
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 
 export const TimerPage = () => {
-  const { time, startTimer, pauseTimer, studyLogId } = useTimer();
+  const { elapsedTime, startTimer, pauseTimer, studyLogId } = useTimer();
 
   const { data: studyLogDetail } = useQuery(
     studyLogQueries.detail(studyLogId || "")
@@ -28,9 +27,7 @@ export const TimerPage = () => {
               background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
             }}
           >
-            <span className="text-9xl">
-              {padZero(convertMsToHMS(time).hours)}
-            </span>
+            <span className="text-9xl">{elapsedTime.hours}</span>
             <span className="text-primary text-label">H O U R S</span>
           </div>
           <div className="flex flex-col gap-16">
@@ -43,9 +40,7 @@ export const TimerPage = () => {
               background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
             }}
           >
-            <span className="text-9xl">
-              {padZero(convertMsToHMS(time).minutes)}
-            </span>
+            <span className="text-9xl">{elapsedTime.minutes}</span>
             <span className="text-primary text-label">M I N U T E S</span>
           </div>
           <div className="flex flex-col gap-16">
@@ -58,9 +53,7 @@ export const TimerPage = () => {
               background: `linear-gradient(to bottom, rgba(76, 121, 255, 0), rgba(76, 121, 255, 0.2))`,
             }}
           >
-            <span className="text-9xl">
-              {padZero(convertMsToHMS(time).seconds)}
-            </span>
+            <span className="text-9xl">{elapsedTime.seconds}</span>
             <span className="text-primary text-label">S E C O N D S</span>
           </div>
         </div>
