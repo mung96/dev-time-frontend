@@ -1,16 +1,9 @@
 import { apiRequester } from "@shared/api/api-requester";
+import { ApiRequest, ApiResponse } from "@shared/api/openapi/helper";
 
-type CreateTimerResponse = {
-  message: string;
-  studyLogId: string;
-  timerId: string;
-  startTime: string; //dateTime
-};
+export type CreateTimerPayload = ApiRequest<"/api/timers", "post">;
+export type CreateTimerResponse = ApiResponse<"/api/timers", "post", 201>;
 
-type CreateTimerPayload = {
-  todayGoal: string;
-  tasks: string[];
-};
 export const createTimer = (payload: CreateTimerPayload) => {
   return apiRequester<CreateTimerResponse>(`/api/internal/timers`, {
     method: "POST",
