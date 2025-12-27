@@ -4,7 +4,7 @@ import { convertMsToHMS, getSplitTime, padZero } from "@pages/timer/lib/time";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export const useTimer = () => {
   const [elapsedMs, setElapsedMs] = useState(0); //밀리세컨드 =>TODO: 이걸 전역에서 관리해야하네
@@ -12,6 +12,16 @@ export const useTimer = () => {
   const { mutate: updateTimer } = useUpdateTimer();
   const router = useRouter();
   const { data: timerDetail } = useQuery(timerQueries.detail());
+
+  useEffect(() => {
+    if (!timerDetail) return;
+
+    const { splitTimes } = timerDetail;
+    const initialElapsedMs = splitTimes.reduce((value, splitTime) => {
+      return value + splitTime.timeSpent;
+    }, 0);
+    setElapsedMs(initialElapsedMs);
+  }, [timerDetail]);
 
   // 타이머에 표시 될 시간
   const elapsedTime = useMemo(() => {
