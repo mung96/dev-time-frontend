@@ -1,5 +1,8 @@
+import { stopTimer } from "./../api/stop-timer";
 import { Timer } from "@entities/timers";
 import { timerQueries } from "@pages/timer/api/timer.query";
+import { useDeleteTimer } from "@pages/timer/api/use-delete-timer";
+import { useStopTimer } from "@pages/timer/api/use-stop-timer";
 import { useUpdateTimer } from "@pages/timer/api/use-update-timer";
 import {
   calculateElapsedMs,
@@ -16,6 +19,9 @@ export const useTimer = () => {
   const [splitTimes, setSplitTimes] = useState<Timer["splitTimes"]>([]);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const { mutate: updateTimer } = useUpdateTimer();
+  const { mutate: stopTimerMutate } = useStopTimer();
+  const { mutate: deleteTimer } = useDeleteTimer();
+
   const router = useRouter();
   const { data: timerDetail } = useQuery(timerQueries.detail());
 
@@ -85,6 +91,7 @@ export const useTimer = () => {
     timerRef.current = setTimeout(updateTime, INTERVAL);
   };
 
+  //타이머 일시 정지
   const pauseTimer = () => {
     removeTimer();
     updateTimer({
@@ -95,10 +102,26 @@ export const useTimer = () => {
     });
   };
 
+  //타이머 정지
+  const stopTimer = () => {};
+
+  //타이머 초기화
+  const resetTimer = () => {
+    if (!timerDetail?.timerId) return;
+    deleteTimer({
+      timerId: timerDetail?.timerId,
+    });
+
+    //TODO: 클리아인트 저장된 시간 초기화
+    setSplitTimes([]);
+    removeTimer();
+  };
+
   return {
     elapsedTime,
     startTimer,
     pauseTimer,
+    resetTimer,
     studyLogId: timerDetail?.studyLogId,
   };
 };
