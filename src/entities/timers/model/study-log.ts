@@ -1,7 +1,7 @@
+import { Task } from "@entities/timers/model/task";
 import z from "zod";
 
 export const TODAY_GOAL_MAX_LENGTH = 30;
-export const TASK_CONTENT_MAX_LENGTH = 30;
 
 export const StudyLog = z.object({
   studyLogId: z.string(),
@@ -11,15 +11,7 @@ export const StudyLog = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   review: z.string(),
   completionRate: z.number(),
-  tasks: z
-    .array(
-      z.object({
-        id: z.string(),
-        content: z.string().max(30, ""),
-        isCompleted: z.boolean(),
-      })
-    )
-    .min(1),
+  tasks: z.array(Task).min(1),
 });
 
 export type StudyLog = z.infer<typeof StudyLog>;
