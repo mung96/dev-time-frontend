@@ -1,8 +1,5 @@
-import { stopTimer } from "./../api/stop-timer";
-import { Timer } from "@entities/timers";
 import { timerQueries } from "@pages/timer/api/timer.query";
 import { useDeleteTimer } from "@pages/timer/api/use-delete-timer";
-import { useStopTimer } from "@pages/timer/api/use-stop-timer";
 import { useUpdateTimer } from "@pages/timer/api/use-update-timer";
 import {
   calculateElapsedMs,
@@ -10,16 +7,16 @@ import {
   getStartOfDay,
   padZero,
 } from "@pages/timer/lib/time";
+import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { PATH } from "@shared/routes";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 export const useTimer = () => {
-  const [splitTimes, setSplitTimes] = useState<Timer["splitTimes"]>([]);
+  const { splitTimes, setSplitTimes } = useTimerStore();
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const { mutate: updateTimer } = useUpdateTimer();
-  const { mutate: stopTimerMutate } = useStopTimer();
   const { mutate: deleteTimer } = useDeleteTimer();
 
   const router = useRouter();
@@ -101,9 +98,6 @@ export const useTimer = () => {
       },
     });
   };
-
-  //타이머 정지
-  const stopTimer = () => {};
 
   //타이머 초기화
   const resetTimer = () => {
