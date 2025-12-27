@@ -8,15 +8,14 @@ import {
   TodoFormValues,
 } from "@pages/timer/model/todo-form-values.schema";
 import { useTimerStore } from "@pages/timer/model/use-timer-store";
+import { TaskItem } from "@pages/timer/ui/task-item";
 import { Button, Dialog, TextField } from "@shared/ui";
 import { TextFieldButton } from "@shared/ui/text-field/text-field-button";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-type Task = TodoFormValues["tasks"][number];
-export const CreateTodoPage = () => {
+export const CreateTimerPage = () => {
   const router = useRouter();
 
   const {
@@ -88,7 +87,7 @@ export const CreateTodoPage = () => {
           <div className="max-h-[460px] overflow-auto">
             <ul className="flex flex-col gap-3">
               {tasks.map((task, index) => (
-                <TodoItem
+                <TaskItem
                   key={task.id}
                   task={task}
                   onEdit={(newTask) => update(index, newTask)}
@@ -109,68 +108,5 @@ export const CreateTodoPage = () => {
         </div>
       </form>
     </Dialog>
-  );
-};
-
-export const TodoItem = ({
-  task,
-  onEdit,
-  onDelete,
-}: {
-  task: Task;
-  onEdit: (newTask: Task) => void;
-  onDelete: () => void;
-}) => {
-  const [content, setContent] = useState(task.content);
-  const [mode, setMode] = useState<"read" | "edit">("read");
-  return (
-    <div className="w-[568px] h-18 bg-primary flex items-center rounded-md px-6 py-[26px] justify-between">
-      {/* 콘텐츠 부분 */}
-      <div>
-        {mode === "read" && (
-          <p className="text-white text-body">{task.content}</p>
-        )}
-        {mode === "edit" && (
-          <input value={content} onChange={(e) => setContent(e.target.value)} />
-        )}
-      </div>
-
-      {/* 우측 */}
-      <div>
-        {mode === "read" && (
-          <div className="flex gap-4">
-            <Image
-              width={24}
-              height={24}
-              src="/icons/edit.svg"
-              alt="편집"
-              onClick={() => setMode("edit")}
-            />
-            <Image
-              width={24}
-              height={24}
-              onClick={onDelete}
-              src="/icons/trash.svg"
-              alt="삭제"
-            />
-          </div>
-        )}
-
-        {mode === "edit" && (
-          <Image
-            width={24}
-            height={24}
-            src="/icons/check.svg"
-            alt="끝내기"
-            onClick={() =>
-              onEdit({
-                content: content,
-                isCompleted: task.isCompleted,
-              })
-            }
-          />
-        )}
-      </div>
-    </div>
   );
 };

@@ -1,5 +1,5 @@
-import { CreateTodoPage } from "@pages/timer/ui/create-todo-page";
+import { CreateTimerPage } from "@pages/timer/ui/create-timer-page";
 
 export default function Page() {
-  return <CreateTodoPage />;
+  return <CreateTimerPage />;
 }
