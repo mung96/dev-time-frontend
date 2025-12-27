@@ -14,13 +14,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
 
 export const useTimer = () => {
-  const { splitTimes, setSplitTimes } = useTimerStore();
+  const { splitTimes, setSplitTimes, setIsRunning } = useTimerStore();
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const { mutate: updateTimer } = useUpdateTimer();
   const { mutate: deleteTimer } = useDeleteTimer();
-
-  const router = useRouter();
   const { data: timerDetail } = useQuery(timerQueries.detail());
+  const router = useRouter();
 
   useEffect(() => {
     if (!timerDetail) return;
@@ -53,6 +52,7 @@ export const useTimer = () => {
       return;
     }
 
+    setIsRunning(true);
     const INTERVAL = 1000;
 
     const startTime = Date.now();
@@ -90,13 +90,14 @@ export const useTimer = () => {
 
   //타이머 일시 정지
   const pauseTimer = () => {
-    removeTimer();
     updateTimer({
       timerId: timerDetail?.timerId || "",
       payload: {
         splitTimes: splitTimes,
       },
     });
+    removeTimer();
+    setIsRunning(false);
   };
 
   //타이머 초기화
@@ -109,6 +110,7 @@ export const useTimer = () => {
     //TODO: 클리아인트 저장된 시간 초기화
     setSplitTimes([]);
     removeTimer();
+    setIsRunning(false);
   };
 
   return {
