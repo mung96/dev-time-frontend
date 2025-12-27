@@ -5,7 +5,8 @@ import { useTimer } from "@pages/timer/model/use-timer";
 import Image from "next/image";
 
 export const TimerPage = () => {
-  const { elapsedTime, startTimer, pauseTimer, studyLogId } = useTimer();
+  const { elapsedTime, startTimer, pauseTimer, resetTimer, studyLogId } =
+    useTimer();
   const { studyLogDetail } = useStudyLog({ studyLogId: studyLogId || "" });
 
   return (
@@ -47,7 +48,7 @@ export const TimerPage = () => {
               alt="todo 목록"
             />
           </button>
-          <button className="w-25 h-25">
+          <button className="w-25 h-25" onClick={() => resetTimer()}>
             <Image width={48} height={48} src="/icons/reset.svg" alt="초기화" />
           </button>
         </div>
