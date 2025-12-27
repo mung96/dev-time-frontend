@@ -1,12 +1,12 @@
 "use client";
+import { TODAY_GOAL_MAX_LENGTH } from "@entities/timers/model/study-log";
+import { TASK_CONTENT_MAX_LENGTH } from "@entities/timers/model/task";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createTimer } from "@pages/timer/api/create-timer";
 import {
-  createNewTodoFormValues,
-  TASK_CONTENT_MAX_LENGTH,
-  TODAY_GOAL_MAX_LENGTH,
-  TodoFormValues,
-} from "@pages/timer/model/todo-form-values.schema";
+  createNewCreateTimerFormValues,
+  CreateTimerFormValues,
+} from "@pages/timer/model/create-timer-form-values.schema";
 import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { TaskItem } from "@pages/timer/ui/task-item";
 import { Button, Dialog, TextField } from "@shared/ui";
@@ -23,9 +23,9 @@ export const CreateTimerPage = () => {
     register,
     handleSubmit,
     formState: { isValid, isSubmitting },
-  } = useForm<TodoFormValues>({
-    resolver: zodResolver(TodoFormValues),
-    defaultValues: createNewTodoFormValues(),
+  } = useForm<CreateTimerFormValues>({
+    resolver: zodResolver(CreateTimerFormValues),
+    defaultValues: createNewCreateTimerFormValues(),
   });
 
   const [newTaskContent, setNewTaskContent] = useState("");

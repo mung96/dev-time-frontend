@@ -1,17 +1,15 @@
 "use client";
-import { TodoFormValues } from "@pages/timer/model/todo-form-values.schema";
+import { Task } from "@entities/timers/model/task";
 import Image from "next/image";
 import { useState } from "react";
-
-type Task = TodoFormValues["tasks"][number];
 
 export const TaskItem = ({
   task,
   onEdit,
   onDelete,
 }: {
-  task: Task;
-  onEdit: (newTask: Task) => void;
+  task: Omit<Task, "id">;
+  onEdit: (newTask: Omit<Task, "id">) => void;
   onDelete: () => void;
 }) => {
   const [content, setContent] = useState(task.content);
