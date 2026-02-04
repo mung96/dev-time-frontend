@@ -36,3 +36,6 @@ backend/bin/
 backend/out/
 backend/*.jar
 backend/*.war
+
+*storybook.log
+storybook-static
