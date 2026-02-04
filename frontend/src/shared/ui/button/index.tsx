@@ -13,8 +13,8 @@ export const Button = ({ priority, className, ...rest }: ButtonProps) => {
         [
           "w-full h-12 px-4 py-3 rounded-sm text-subtitle font-semibold relative", //기본 CSS
           "before:content-[''] before:absolute before:inset-0 before:bg-black/10 before:opacity-0 before:rounded-sm before:transition-opacity", //hover, active시 사용
-          "hover:before:opacity-100", // hover
-          "active:before:opacity-100", // active
+          "enabled:hover:before:opacity-100", // hover
+          "enabled:active:before:opacity-100", // active
           "focus:ring-1 focus:ring-fuchsia", // focus
         ],
         priority === "primary" && [
