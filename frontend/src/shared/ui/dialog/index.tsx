@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@shared/lib/style";
+import { cn } from "@shared/lib/tailwind";
 import { ReactNode, useEffect, useRef } from "react";
 
 export interface DialogProps {
