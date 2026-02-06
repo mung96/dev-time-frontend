@@ -1,4 +1,5 @@
 "use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   SignUpFormValues,
@@ -6,7 +7,6 @@ import {
 } from "@pages/auth/model/signup-form-values.schema";
 import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
-import { Checkbox } from "@shared/ui/checkbox";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -15,13 +15,12 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useState } from "react";
 import { signup } from "@pages/auth/api/signup";
 import { useRouter } from "next/navigation";
-import { TermsService } from "@pages/auth/ui/terms-service";
 
-import clsx from "clsx";
 import { EmailField } from "@pages/auth/ui/email-field";
 import { NicknameField } from "@pages/auth/ui/nickname-field";
 import { PasswordField } from "@pages/auth/ui/password-field";
 import { PasswordConfirmField } from "@pages/auth/ui/password-confirm-field";
+import { TermsAgreementField } from "@pages/auth/ui/terms-agreement-field";
 
 export const SignupPage = () => {
   const methods = useForm<SignUpFormValues>({
@@ -68,42 +67,25 @@ export const SignupPage = () => {
                 회원가입
               </h2>
               <fieldset className="flex flex-col gap-10">
+                {/* 이메일 */}
                 <EmailField
                   isValidDuplicateEmail={isValidDuplicateEmail}
                   setIsValidDuplicateEmail={setIsValidDuplicateEmail}
                 />
-
+                {/* 닉네임 */}
                 <NicknameField
                   isValidDuplicateNickname={isValidDuplicateNickname}
                   setIsValidDuplicateNickname={setIsValidDuplicateNickname}
                 />
-
+                {/* 비밀번호 */}
                 <PasswordField />
-
+                {/* 비밀번호 확인 */}
                 <PasswordConfirmField />
-
-                <section className="flex flex-col gap-2">
-                  <div className="flex justify-between">
-                    <span>이용약관</span>
-                    <div className="flex gap-1 items-center">
-                      <label
-                        htmlFor="terms"
-                        className={clsx(
-                          "text-small text-medium text-primary/30",
-                          isChecked && "text-primary/100"
-                        )}
-                      >
-                        동의함
-                      </label>
-                      <Checkbox
-                        id="terms"
-                        checked={isChecked}
-                        onChange={(e) => setIsChecked(e.target.checked)}
-                      />
-                    </div>
-                  </div>
-                  <TermsService />
-                </section>
+                {/* 이용약관 */}
+                <TermsAgreementField
+                  isChecked={isChecked}
+                  setIsChecked={setIsChecked}
+                />
               </fieldset>
               <Button
                 priority={"primary"}
@@ -117,7 +99,7 @@ export const SignupPage = () => {
           <p>
             <span className="text-primary text-body font-medium">
               회원이신가요?
-            </span>{" "}
+            </span>
             <Link
               href={PATH.LOGIN}
               className="text-primary text-body font-bold "

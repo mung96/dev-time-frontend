@@ -1,4 +1,41 @@
-export const TermsService = () => {
+import { cn } from "@shared/lib/tailwind";
+import { Checkbox } from "@shared/ui";
+
+type TermsAgreementFieldProps = {
+  isChecked: boolean;
+  setIsChecked: (v: boolean) => void;
+};
+export const TermsAgreementField = ({
+  isChecked,
+  setIsChecked,
+}: TermsAgreementFieldProps) => {
+  return (
+    <section className="flex flex-col gap-2">
+      <div className="flex justify-between">
+        <span>이용약관</span>
+        <div className="flex gap-1 items-center">
+          <label
+            htmlFor="terms"
+            className={cn(
+              "text-small text-medium text-primary/30",
+              isChecked && "text-primary/100"
+            )}
+          >
+            동의함
+          </label>
+          <Checkbox
+            id="terms"
+            checked={isChecked}
+            onChange={(e) => setIsChecked(e.target.checked)}
+          />
+        </div>
+      </div>
+      <TermsAgreementContent />
+    </section>
+  );
+};
+
+const TermsAgreementContent = () => {
   return (
     <div className="bg-gray-50 h-[110px] overflow-y-scroll py-3 px-4">
       <strong>제1조 (목적)</strong>
