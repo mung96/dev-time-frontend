@@ -3,14 +3,15 @@ import { useFormContext, useFormState } from "react-hook-form";
 import { TextField } from "@shared/ui/text-field";
 import { ApiError, HttpStatus } from "@shared/api";
 
-type EmailField = {
+type EmailFieldProps = {
   isValidDuplicateEmail: boolean;
   setIsValidDuplicateEmail: (v: boolean) => void;
 };
+
 export const EmailField = ({
   isValidDuplicateEmail,
   setIsValidDuplicateEmail,
-}: EmailField) => {
+}: EmailFieldProps) => {
   const { control, register, getValues, setError } = useFormContext<{
     email: string;
   }>();
