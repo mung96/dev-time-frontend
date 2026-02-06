@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
-import { TextField } from "@shared/ui/text-field";
+import { TextField } from "@shared/ui/input-field";
 import { HelperText } from "@shared/ui/text-field/helper-text";
 import Link from "next/link";
 import { useForm } from "react-hook-form";

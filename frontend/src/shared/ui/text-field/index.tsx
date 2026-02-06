@@ -1,42 +1,69 @@
 "use client";
 
-import clsx from "clsx";
-import { ReactNode } from "react";
+import { ButtonProps, Button } from "@shared/ui/button";
+import { Input } from "./input";
+import { HelperText } from "./helper-text";
+import { createContext, ReactNode, useContext } from "react";
 
-interface TextFieldProps extends React.ComponentProps<"input"> {
-  label: string;
-  isError?: boolean;
-  button?: ReactNode;
-  helperText?: ReactNode;
-  className?: string;
-}
+type TextFieldContextType = {
+  id: string; //label, input의 접근성을 위해 사용
+  error?: string; //errorMessage넘기기
+  success?: string; //successMessage넘기기
+};
+
+const TextFieldContext = createContext<TextFieldContextType | null>(null);
+
+const useTextFieldContext = () => {
+  const context = useContext(TextFieldContext);
+  if (!context) {
+    throw new Error("useTextFieldContext는 TextField와 같이 사용해야합니다.");
+  }
+  return context;
+};
+
 export const TextField = ({
-  label,
-  isError,
-  button,
-  helperText,
-  className,
-  ...inputProps
-}: TextFieldProps) => {
+  id,
+  error,
+  success,
+  children,
+}: Pick<TextFieldContextType, "id" | "error" | "success"> & {
+  children: ReactNode;
+}) => {
   return (
-    <div className={clsx("flex flex-col gap-[8px] h-[94px]", className)}>
-      <label className="text-small font-medium text-gray-600">{label}</label>
-      <div className="relative">
-        <div className="flex gap-3">
-          <input
-            className={clsx(
-              "w-full h-11 flex-1 min-w-30 bg-gray-50 px-4 py-3 text-gray-600 text-body font-medium rounded-sm",
-              "placeholder:text-gray-300 placeholder:text-body placeholder:font-medium", //placeholder
-              "focus:text-gray-800", //focus
-              isError && "border border-negative"
-            )}
-            {...inputProps}
-          />
-          {button}
-        </div>
-
-        {helperText}
-      </div>
-    </div>
+    <TextFieldContext.Provider value={{ id, error, success }}>
+      {children}
+    </TextFieldContext.Provider>
   );
 };
+
+const Label = ({ label }: { label: string }) => {
+  const { id } = useTextFieldContext();
+
+  return (
+    <label htmlFor={id} className="text-small font-medium text-gray-600">
+      {label}
+    </label>
+  );
+};
+const TextFieldButton = (props: ButtonProps) => {
+  return <Button type="button" priority={"secondary"} {...props} />;
+};
+
+const TextFieldInput = ({ ...props }: React.ComponentProps<"input">) => {
+  const { id, error } = useTextFieldContext();
+  return <Input id={id} name={id} isError={!!error} {...props} />;
+};
+
+const TextFieldHelperText = () => {
+  const { error, success } = useTextFieldContext();
+  if (!!error) {
+    return <HelperText state={"error"}>{error}</HelperText>;
+  }
+
+  return <HelperText state={"success"}>{success}</HelperText>;
+};
+
+TextField.Label = Label;
+TextField.Button = TextFieldButton;
+TextField.Input = TextFieldInput;
+TextField.HelperText = TextFieldHelperText;
