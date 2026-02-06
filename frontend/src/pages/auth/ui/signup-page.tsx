@@ -29,6 +29,7 @@ export const SignupPage = () => {
       nickname: "",
       password: "",
       confirmPassword: "",
+      isTermsAgreementChecked: false,
     },
     resolver: zodResolver(SignUpFormValuesSchema),
     mode: "onTouched",
@@ -42,10 +43,8 @@ export const SignupPage = () => {
   const [isValidDuplicateNickname, setIsValidDuplicateNickname] =
     useState(false);
 
-  const [isChecked, setIsChecked] = useState(false);
-
   const isFormValid =
-    isChecked && isValidDuplicateEmail && isValidDuplicateNickname && isValid;
+    isValidDuplicateEmail && isValidDuplicateNickname && isValid;
 
   return (
     <div className="flex h-full">
@@ -82,10 +81,7 @@ export const SignupPage = () => {
                 {/* 비밀번호 확인 */}
                 <PasswordConfirmField />
                 {/* 이용약관 */}
-                <TermsAgreementField
-                  isChecked={isChecked}
-                  setIsChecked={setIsChecked}
-                />
+                <TermsAgreementField />
               </fieldset>
               <Button
                 priority={"primary"}

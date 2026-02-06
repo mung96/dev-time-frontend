@@ -1,14 +1,19 @@
 import { cn } from "@shared/lib/tailwind";
 import { Checkbox } from "@shared/ui";
+import { useController, useFormContext, useFormState } from "react-hook-form";
 
-type TermsAgreementFieldProps = {
-  isChecked: boolean;
-  setIsChecked: (v: boolean) => void;
-};
-export const TermsAgreementField = ({
-  isChecked,
-  setIsChecked,
-}: TermsAgreementFieldProps) => {
+export const TermsAgreementField = ({}) => {
+  const { control } = useFormContext<{
+    isTermsAgreementChecked: boolean;
+  }>();
+  const { errors } = useFormState<{ isTermsAgreementChecked: boolean }>({
+    control,
+  });
+
+  const { field: isTermsAgreementChecked } = useController({
+    control,
+    name: "isTermsAgreementChecked",
+  });
   return (
     <section className="flex flex-col gap-2">
       <div className="flex justify-between">
@@ -18,15 +23,15 @@ export const TermsAgreementField = ({
             htmlFor="terms"
             className={cn(
               "text-small text-medium text-primary/30",
-              isChecked && "text-primary/100"
+              isTermsAgreementChecked && "text-primary/100"
             )}
           >
             동의함
           </label>
           <Checkbox
             id="terms"
-            checked={isChecked}
-            onChange={(e) => setIsChecked(e.target.checked)}
+            checked={isTermsAgreementChecked.value}
+            onChange={(e) => isTermsAgreementChecked.onChange(e.target.checked)}
           />
         </div>
       </div>
