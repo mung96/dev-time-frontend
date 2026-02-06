@@ -7,8 +7,6 @@ import {
 import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
 import { Checkbox } from "@shared/ui/checkbox";
-import { TextField as InputField } from "@shared/ui/input-field";
-import { HelperText } from "@shared/ui/text-field/helper-text";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +20,8 @@ import { TermsService } from "@pages/auth/ui/terms-service";
 import clsx from "clsx";
 import { EmailField } from "@pages/auth/ui/email-field";
 import { NicknameField } from "@pages/auth/ui/nickname-field";
+import { PasswordField } from "@pages/auth/ui/password-field";
+import { PasswordConfirmField } from "@pages/auth/ui/password-confirm-field";
 
 export const SignupPage = () => {
   const methods = useForm<SignUpFormValues>({
@@ -36,12 +36,8 @@ export const SignupPage = () => {
   });
   const router = useRouter();
   const {
-    register,
-    getValues,
-    setError,
     handleSubmit,
-    control,
-    formState: { errors, touchedFields, isValid, isSubmitting },
+    formState: { isValid, isSubmitting },
   } = methods;
   const [isValidDuplicateEmail, setIsValidDuplicateEmail] = useState(false);
   const [isValidDuplicateNickname, setIsValidDuplicateNickname] =
@@ -95,30 +91,11 @@ export const SignupPage = () => {
                   isValidDuplicateNickname={isValidDuplicateNickname}
                   setIsValidDuplicateNickname={setIsValidDuplicateNickname}
                 />
-                <InputField
-                  label={"비밀번호"}
-                  type="password"
-                  {...register("password")}
-                  placeholder="비밀번호를 입력해 주세요."
-                  helperText={
-                    <HelperText state={"error"}>
-                      {errors.password?.message}
-                    </HelperText>
-                  }
-                  isError={!!errors.password?.message}
-                />
-                <InputField
-                  label={"비밀번호 확인"}
-                  type="password"
-                  {...register("confirmPassword")}
-                  placeholder="비밀번호를 다시 입력해 주세요."
-                  helperText={
-                    <HelperText state={"error"}>
-                      {errors.confirmPassword?.message}
-                    </HelperText>
-                  }
-                  isError={!!errors.confirmPassword?.message}
-                />
+
+                <PasswordField />
+
+                <PasswordConfirmField />
+
                 <section className="flex flex-col gap-2">
                   <div className="flex justify-between">
                     <span>이용약관</span>
