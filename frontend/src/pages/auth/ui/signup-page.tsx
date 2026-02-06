@@ -9,18 +9,18 @@ import {
 import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
 import { Checkbox } from "@shared/ui/checkbox";
-import { TextField } from "@shared/ui/text-field";
+import { TextField as InputField } from "@shared/ui/input-field";
 import { HelperText } from "@shared/ui/text-field/helper-text";
-import { TextFieldButton } from "@shared/ui/text-field/text-field-button";
+import { TextFieldButton } from "@shared/ui/input-field/text-field-button";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { checkNickname } from "@pages/auth/api/check-nickname";
 import { useState } from "react";
 import { signup } from "@pages/auth/api/signup";
-import { DevTool } from "@hookform/devtools";
 import { useRouter } from "next/navigation";
 import { TermsService } from "@pages/auth/ui/terms-service";
+import { TextField } from "@shared/ui/text-field";
 import clsx from "clsx";
 
 export const SignupPage = () => {
@@ -84,68 +84,63 @@ export const SignupPage = () => {
             <h2 className="text-heading text-primary text-center">회원가입</h2>
             <fieldset className="flex flex-col gap-10">
               <TextField
-                label={"아이디"}
-                placeholder="이메일 주소 형식으로 입력해 주세요."
-                {...register("email", {
-                  onChange: () => setIsValidDuplicateEmail(false),
-                })}
-                button={
-                  <TextFieldButton
-                    type="button"
-                    disabled={
-                      !touchedFields.email ||
-                      errors.email?.type === "invalid_format"
-                    }
-                    onClick={() => {
-                      const email = getValues("email");
-                      checkEmail(email)
-                        .then((response) => {
-                          if (response.available) {
-                            setIsValidDuplicateEmail(true);
-                          } else {
-                            setError("email", {
-                              type: "duplicate",
-                              message: response.message,
-                            });
-                          }
-                        })
-                        .catch((error) => {
-                          if (error instanceof ApiError) {
-                            if (error.status === HttpStatus.BAD_REQUEST) {
+                id={"id"}
+                error={
+                  !!touchedFields.email ? errors.email?.message : undefined
+                }
+                success={
+                  isValidDuplicateEmail
+                    ? "사용 가능한 이메일입니다."
+                    : undefined
+                }
+              >
+                <div className="flex flex-col gap-2">
+                  <TextField.Label label="아이디" />
+                  <div className="flex gap-3">
+                    <TextField.Input
+                      placeholder="이메일 주소 형식으로 입력해 주세요."
+                      {...register("email", {
+                        onChange: () => setIsValidDuplicateEmail(false),
+                      })}
+                    />
+                    <TextField.Button
+                      disabled={
+                        !touchedFields.email ||
+                        errors.email?.type === "invalid_format"
+                      }
+                      onClick={() => {
+                        const email = getValues("email");
+                        checkEmail(email)
+                          .then((response) => {
+                            if (response.available) {
+                              setIsValidDuplicateEmail(true);
+                            } else {
                               setError("email", {
-                                type: "invalid_format",
-                                message: error.message,
+                                type: "duplicate",
+                                message: response.message,
                               });
                             }
-                          }
-                        });
-                    }}
-                  >
-                    중복 확인
-                  </TextFieldButton>
-                }
-                helperText={
-                  <>
-                    {!!touchedFields.email ? (
-                      !!errors.email?.message ? (
-                        <HelperText state={"error"}>
-                          {errors.email?.message}
-                        </HelperText>
-                      ) : (
-                        isValidDuplicateEmail && (
-                          <HelperText state={"success"}>
-                            사용 가능한 이메일입니다.
-                          </HelperText>
-                        )
-                      )
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                }
-                isError={!!errors.email?.message}
-              />
-              <TextField
+                          })
+                          .catch((error) => {
+                            if (error instanceof ApiError) {
+                              if (error.status === HttpStatus.BAD_REQUEST) {
+                                setError("email", {
+                                  type: "invalid_format",
+                                  message: error.message,
+                                });
+                              }
+                            }
+                          });
+                      }}
+                    >
+                      중복 확인
+                    </TextField.Button>
+                  </div>
+                  <TextField.HelperText />
+                </div>
+              </TextField>
+
+              <InputField
                 label={"닉네임"}
                 placeholder="닉네임을 입력해 주세요."
                 {...register("nickname", {
@@ -207,7 +202,7 @@ export const SignupPage = () => {
                 }
                 isError={!!errors.nickname?.message}
               />
-              <TextField
+              <InputField
                 label={"비밀번호"}
                 type="password"
                 {...register("password")}
@@ -219,7 +214,7 @@ export const SignupPage = () => {
                 }
                 isError={!!errors.password?.message}
               />
-              <TextField
+              <InputField
                 label={"비밀번호 확인"}
                 type="password"
                 {...register("confirmPassword")}
