@@ -1,22 +1,22 @@
-import clsx from "clsx";
+import { cn } from "@shared/lib/tailwind";
+import { cva, VariantProps } from "class-variance-authority";
 import { ReactNode } from "react";
 
-interface HelperTextProps {
+type HelperTextProps = VariantProps<typeof helperTextVariants> & {
   state: "success" | "error" | "informative";
   children: ReactNode;
-}
+};
+
+const helperTextVariants = cva(["text-caption font-medium"], {
+  variants: {
+    state: {
+      success: "text-positive",
+      error: "text-negative",
+      informative: "text-informative",
+    },
+  },
+});
 
 export const HelperText = ({ state, children }: HelperTextProps) => {
-  return (
-    <span
-      className={clsx(
-        "text-caption font-medium",
-        state === "success" && "text-positive",
-        state === "error" && "text-negative",
-        state === "informative" && "text-informative"
-      )}
-    >
-      {children}
-    </span>
-  );
+  return <span className={cn(helperTextVariants({ state }))}>{children}</span>;
 };
