@@ -39,3 +39,6 @@ backend/*.war
 
 *storybook.log
 storybook-static
+
+
+.docs
