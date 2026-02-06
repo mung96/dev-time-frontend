@@ -50,21 +50,7 @@ export const SignupPage = () => {
 
   return (
     <div className="flex h-full">
-      <div className="flex-1 bg-primary flex items-center justify-center">
-        <div className="flex flex-col gap-9 items-center justify-center">
-          <picture>
-            <Image
-              width={264}
-              height={200}
-              src="/images/Logo.png"
-              alt="DevTime 로고"
-            />
-          </picture>
-          <span className="text-white text-title font-semibold">
-            개발자를 위한 타이머
-          </span>
-        </div>
-      </div>
+      <SideBanner />
       <div className="flex-1 flex justify-center w-full">
         <div className="flex flex-col items-center gap-6">
           <FormProvider {...methods}>
@@ -140,6 +126,26 @@ export const SignupPage = () => {
             </Link>
           </p>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const SideBanner = () => {
+  return (
+    <div className="flex-1 bg-primary flex items-center justify-center">
+      <div className="flex flex-col gap-9 items-center justify-center">
+        <picture>
+          <Image
+            width={264}
+            height={200}
+            src="/images/Logo.png"
+            alt="DevTime 로고"
+          />
+        </picture>
+        <span className="text-white text-title font-semibold">
+          개발자를 위한 타이머
+        </span>
       </div>
     </div>
   );
