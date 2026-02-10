@@ -29,13 +29,19 @@ frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 
-# Backend (Spring Boot)
-backend/build/
-backend/.gradle/
-backend/bin/
-backend/out/
-backend/*.jar
-backend/*.war
+# Backend (NestJS)
+backend/node_modules/
+backend/dist/
+backend/coverage/
+backend/*.tsbuildinfo
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/.yarn/*
+!backend/.yarn/patches
+!backend/.yarn/plugins
+!backend/.yarn/releases
+!backend/.yarn/versions
 
 *storybook.log
 storybook-static
