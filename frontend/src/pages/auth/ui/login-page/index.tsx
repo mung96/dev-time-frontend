@@ -7,7 +7,7 @@ import { TextField } from "@shared/ui/input-field";
 import { HelperText } from "@shared/ui/text-field/helper-text";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { LoginFormValues } from "@pages/auth/model/login-form-values.schema";
+import { LoginFormValues } from "@pages/auth/model/login-form-values";
 import { useRouter } from "next/navigation";
 import { login } from "@pages/auth/api/login";
 import { useOpenLoginFailModal } from "@pages/auth/model/use-login-fail-modal-store";

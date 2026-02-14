@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   SignUpFormValues,
   SignUpFormValuesSchema,
-} from "@pages/auth/model/signup-form-values.schema";
+} from "@pages/auth/model/signup-form-values";
 import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
 
@@ -17,10 +17,10 @@ import { signup } from "@pages/auth/api/signup";
 import { useRouter } from "next/navigation";
 
 import { EmailField } from "@pages/auth/ui/email-field";
-import { NicknameField } from "@pages/auth/ui/nickname-field";
+import { NicknameField } from "@pages/auth/ui/nickname-field/nickname-field";
 import { PasswordField } from "@pages/auth/ui/password-field";
-import { PasswordConfirmField } from "@pages/auth/ui/password-confirm-field";
-import { TermsAgreementField } from "@pages/auth/ui/terms-agreement-field";
+import { PasswordConfirmField } from "@pages/auth/ui/password-confirm-field/password-confirm-field";
+import { TermsAgreementField } from "@pages/auth/ui/term-agreement-field";
 
 export const SignupPage = () => {
   const methods = useForm<SignUpFormValues>({
