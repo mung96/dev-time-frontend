@@ -21,6 +21,7 @@ import { NicknameField } from "@pages/auth/signup/ui/nickname-field/nickname-fie
 import { PasswordField } from "@pages/auth/signup/ui/password-field";
 import { PasswordConfirmField } from "@pages/auth/signup/ui/password-confirm-field/password-confirm-field";
 import { TermsAgreementField } from "@pages/auth/signup/ui/term-agreement-field";
+import { useSignup } from "@pages/auth/signup/model/use-signup";
 
 export const SignupPage = () => {
   const methods = useForm<SignUpFormValues>({
@@ -37,11 +38,13 @@ export const SignupPage = () => {
   const router = useRouter();
   const {
     handleSubmit,
-    formState: { isValid, isSubmitting },
+    formState: { isValid },
   } = methods;
   const [isValidDuplicateEmail, setIsValidDuplicateEmail] = useState(false);
   const [isValidDuplicateNickname, setIsValidDuplicateNickname] =
     useState(false);
+
+  const { mutate: signup, isPending } = useSignup();
 
   const isFormValid =
     isValidDuplicateEmail && isValidDuplicateNickname && isValid;
@@ -56,8 +59,8 @@ export const SignupPage = () => {
               className="mt-[140px] w-105 flex flex-col gap-6"
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSubmit(async (data) => {
-                  await signup(data);
+                handleSubmit((data) => {
+                  signup(data);
                   router.replace(PATH.LOGIN);
                 })();
               }}
@@ -86,7 +89,7 @@ export const SignupPage = () => {
               <Button
                 priority={"primary"}
                 type="submit"
-                disabled={!isFormValid || isSubmitting}
+                disabled={!isFormValid || isPending}
               >
                 회원가입
               </Button>
