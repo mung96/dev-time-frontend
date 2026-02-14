@@ -1,4 +1,4 @@
-import { checkNickname } from "@pages/auth/api/check-nickname";
+import { checkNickname } from "@pages/auth/signup/api/check-nickname";
 import { ApiError, HttpStatus } from "@shared/api";
 import { useFormContext, useFormState } from "react-hook-form";
 import { TextField } from "@shared/ui/text-field";

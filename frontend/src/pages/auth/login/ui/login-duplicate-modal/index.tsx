@@ -1,5 +1,5 @@
 "use client";
-import { useLoginDuplicateModal } from "@pages/auth/model/use-login-duplicate-modal-store";
+import { useLoginDuplicateModal } from "@pages/auth/login/model/use-login-duplicate-modal-store";
 import { Button, Dialog } from "@shared/ui";
 
 export const LoginDuplicateModal = () => {

@@ -1,4 +1,4 @@
-import { checkEmail } from "@pages/auth/api/check-email";
+import { checkEmail } from "@pages/auth/signup/api/check-email";
 import { useFormContext, useFormState } from "react-hook-form";
 import { TextField } from "@shared/ui/text-field";
 import { ApiError, HttpStatus } from "@shared/api";

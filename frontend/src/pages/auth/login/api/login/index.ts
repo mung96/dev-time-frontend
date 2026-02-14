@@ -1,4 +1,4 @@
-import { LoginFormValues } from "@pages/auth/model/login-form-values";
+import { LoginFormValues } from "@pages/auth/login/model/login-form-values";
 import { apiRequester } from "@shared/api/api-requester";
 
 type LoginResponse = {

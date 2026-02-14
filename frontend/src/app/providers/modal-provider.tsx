@@ -1,7 +1,7 @@
 "use client";
 
-import { LoginDuplicateModal } from "@pages/auth/ui/login-duplicate-modal";
-import { LoginFailModal } from "@pages/auth/ui/login-fail-modal/login-fail-modal";
+import { LoginDuplicateModal } from "@pages/auth/login/ui/login-duplicate-modal";
+import { LoginFailModal } from "@pages/auth/login/ui/login-fail-modal/login-fail-modal";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 

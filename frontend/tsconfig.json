@@ -34,7 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "src/pages/auth/model/login-form-values"
+    "src/pages/auth/login/model/login-form-values"
   ],
   "exclude": ["node_modules"]
 }
