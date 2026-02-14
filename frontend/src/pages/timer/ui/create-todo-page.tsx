@@ -9,7 +9,7 @@ import {
 } from "@pages/timer/model/todo-form-values.schema";
 import { useTimerStore } from "@pages/timer/model/use-timer-store";
 import { Button, Dialog, TextField } from "@shared/ui";
-import { TextFieldButton } from "@shared/ui/text-field/text-field-button";
+import { TextFieldButton } from "@shared/ui/input-field/text-field-button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

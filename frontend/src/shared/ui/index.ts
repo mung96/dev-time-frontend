@@ -1,4 +1,4 @@
 export { Button } from "./button";
 export { Checkbox } from "./checkbox";
-export { TextField } from "./text-field";
+export { TextField } from "./input-field";
 export { Dialog } from "./dialog";

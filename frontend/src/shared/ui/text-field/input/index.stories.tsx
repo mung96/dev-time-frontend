@@ -1,4 +1,4 @@
-import { Input } from "@shared/ui/input-field/input";
+import { Input } from "@shared/ui/text-field/input";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { fn } from "storybook/test";
 

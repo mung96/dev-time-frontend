@@ -1,5 +1,5 @@
 "use client";
-import { useLoginFailModal } from "@pages/auth/model/use-login-fail-modal-store";
+import { useLoginFailModal } from "@pages/auth/login/model/use-login-fail-modal-store";
 import { Button, Dialog } from "@shared/ui";
 
 export const LoginFailModal = () => {

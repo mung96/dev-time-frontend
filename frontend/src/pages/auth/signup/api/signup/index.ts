@@ -1,4 +1,4 @@
-import { SignUpFormValues } from "../model/signup-form-values.schema";
+import { SignUpFormValues } from "../../model/signup-form-values";
 import { apiRequester } from "@shared/api/api-requester";
 
 export const signup = (payload: SignUpFormValues) => {

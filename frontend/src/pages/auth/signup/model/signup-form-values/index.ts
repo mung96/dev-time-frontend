@@ -7,6 +7,11 @@ export const SignUpFormValuesSchema = z
     nickname: MemberSchema.shape.nickname,
     password: MemberSchema.shape.password,
     confirmPassword: z.string(),
+    isTermsAgreementChecked: z.boolean(),
+  })
+  .refine((data) => !!data.isTermsAgreementChecked, {
+    message: "이용약관에 동의해주세요",
+    path: ["isTermsAgreementChecked"],
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "비밀번호가 일치하지 않습니다.",
