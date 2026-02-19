@@ -9,42 +9,34 @@
 # env files
 .env*
 
-# Frontend (Next.js)
-frontend/node_modules/
-frontend/.next/
-frontend/out/
-frontend/build/
-frontend/.pnp
-frontend/.pnp.*
-frontend/.yarn/*
-!frontend/.yarn/patches
-!frontend/.yarn/plugins
-!frontend/.yarn/releases
-!frontend/.yarn/versions
-frontend/coverage/
-frontend/.vercel
-frontend/*.tsbuildinfo
-frontend/next-env.d.ts
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
+# Dependencies
+node_modules/
 
-# Backend (NestJS)
-backend/node_modules/
-backend/dist/
-backend/coverage/
-backend/*.tsbuildinfo
-backend/npm-debug.log*
-backend/yarn-debug.log*
-backend/yarn-error.log*
-backend/.yarn/*
-!backend/.yarn/patches
-!backend/.yarn/plugins
-!backend/.yarn/releases
-!backend/.yarn/versions
+# Next.js
+.next/
+out/
+build/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.vercel
+next-env.d.ts
 
+# Build & Coverage
+coverage/
+*.tsbuildinfo
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Storybook
 *storybook.log
 storybook-static
-
 
 .docs
