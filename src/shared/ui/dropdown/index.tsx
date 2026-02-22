@@ -1,8 +1,7 @@
 import { cn } from "@shared/lib/tailwind";
 import { ChevronDown } from "@shared/ui/icons";
-import { Input } from "@shared/ui/text-field/input";
 import { cva } from "class-variance-authority";
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 type DropdownContextType = {
   value: string;
@@ -68,7 +67,6 @@ const triggerVariants = cva(
 
 const Trigger = ({ placeholder }: { placeholder: string }) => {
   const { isOpen, setIsOpen, value } = useDropdownContext();
-  console.log(!!value);
   return (
     <button
       type="button"
