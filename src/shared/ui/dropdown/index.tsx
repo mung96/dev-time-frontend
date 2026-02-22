@@ -102,10 +102,13 @@ const Options = ({ children }: { children: ReactNode }) => {
 };
 
 const Option = ({ value, label, id }: Option) => {
-  const { onValueChange } = useDropdownContext();
+  const { value: selectedValue, onValueChange } = useDropdownContext();
   return (
     <li
-      className="w-full min-w-[123px] h-9 shrink-0 text-body font-medium border-b text-gray-800 border-b-gray-300"
+      className={cn(
+        "w-full min-w-[123px] h-9 shrink-0 text-body font-medium border-b text-gray-800 border-b-gray-300",
+        selectedValue === value && "text-indigo",
+      )}
       id={id}
       onClick={() => onValueChange(value)}
     >
