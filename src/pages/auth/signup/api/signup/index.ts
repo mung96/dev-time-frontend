@@ -3,8 +3,8 @@ import { apiRequester } from "@shared/api/api-requester";
 
 export const signup = (payload: SignUpFormValues) => {
   return apiRequester<{
-    success: true;
-    available: true;
+    success: boolean;
+    available: boolean;
     message: string;
   }>(`/api/signup`, {
     method: "POST",

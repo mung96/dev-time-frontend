@@ -8,12 +8,10 @@ import {
 import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
 
-import Image from "next/image";
 import Link from "next/link";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useState } from "react";
-import { signup } from "@pages/auth/signup/api/signup";
 import { useRouter } from "next/navigation";
 
 import { EmailField } from "@pages/auth/signup/ui/email-field";
