@@ -12,16 +12,15 @@ export async function POST(req: NextRequest) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    return NextResponse.json({ ...error }, { status: response.status });
+    const body = await response.json();
+    return NextResponse.json(body, { status: response.status });
   }
 
   const { accessToken, refreshToken, ...loginInfo } = await response.json();
-  const res = NextResponse.json({ ...loginInfo });
 
   // 토큰을 쿠키에 세팅
   await cookieManager.setAccessToken(accessToken);
   await cookieManager.setRefreshToken(refreshToken);
 
-  return res;
+  return NextResponse.json({ ...loginInfo });
 }
