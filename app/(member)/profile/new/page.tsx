@@ -1,5 +1,5 @@
-import { CreateProfilePage } from "@pages/member/ui/create-profile-page";
+import { ProfileCreatePage } from "@pages/member/profile-create";
 
 export default function Page() {
-  return <CreateProfilePage />;
+  return <ProfileCreatePage />;
 }
