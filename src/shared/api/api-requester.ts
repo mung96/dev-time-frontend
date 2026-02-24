@@ -1,6 +1,6 @@
 export const apiRequester = async <T = unknown>(
   endpoint: string,
-  options: RequestInit
+  options: RequestInit,
 ): Promise<T> => {
   const { headers, ...restOptions } = options;
 

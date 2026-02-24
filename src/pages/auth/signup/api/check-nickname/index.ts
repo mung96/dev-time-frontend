@@ -2,8 +2,8 @@ import { apiRequester } from "@shared/api/api-requester";
 
 export const checkNickname = (nickname: string) => {
   return apiRequester<{
-    success: true;
-    available: true;
+    success: boolean;
+    available: boolean;
     message: string;
   }>(`/api/signup/check-nickname?nickname=${nickname}`, {
     method: "GET",
