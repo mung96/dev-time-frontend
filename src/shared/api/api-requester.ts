@@ -1,10 +1,12 @@
+import { BFF_PREFIX } from "../api/config";
+
 export const apiRequester = async <T = unknown>(
   endpoint: string,
   options: RequestInit,
 ): Promise<T> => {
   const { headers, ...restOptions } = options;
 
-  const response = await fetch(endpoint, {
+  const response = await fetch(BFF_PREFIX + endpoint, {
     headers: {
       "Content-Type": "application/json",
       ...headers,

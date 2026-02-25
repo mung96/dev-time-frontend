@@ -20,6 +20,7 @@ import { PasswordField } from "@pages/auth/signup/ui/password-field";
 import { PasswordConfirmField } from "@pages/auth/signup/ui/password-confirm-field/password-confirm-field";
 import { TermsAgreementField } from "@pages/auth/signup/ui/term-agreement-field";
 import { useSignup } from "@pages/auth/signup/model/use-signup";
+import Image from "next/image";
 
 export const SignupPage = () => {
   const methods = useForm<SignUpFormValues>({

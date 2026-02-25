@@ -3,10 +3,10 @@ import z from "zod";
 
 export const getStudyLogDetail = async (studyLogId: string) => {
   const response = await apiRequester<StudyLogDetailResponse>(
-    `/api/internal/study-logs/${studyLogId}`,
+    `/study-logs/${studyLogId}`,
     {
       method: "GET",
-    }
+    },
   );
 
   // const result = StudyLogDetailResponse.safeParse(response);
@@ -27,7 +27,7 @@ export const StudyLogDetailResponse = z.object({
       id: z.string(),
       content: z.string(),
       isCompleted: z.boolean(),
-    })
+    }),
   ),
   review: z.string(),
   completionRate: z.number(),

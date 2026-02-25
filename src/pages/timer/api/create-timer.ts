@@ -5,7 +5,7 @@ export type CreateTimerPayload = ApiRequest<"/api/timers", "post">;
 export type CreateTimerResponse = ApiResponse<"/api/timers", "post", 201>;
 
 export const createTimer = (payload: CreateTimerPayload) => {
-  return apiRequester<CreateTimerResponse>(`/api/internal/timers`, {
+  return apiRequester<CreateTimerResponse>(`/timers`, {
     method: "POST",
     body: JSON.stringify(payload),
   });

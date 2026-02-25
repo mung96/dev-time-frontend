@@ -5,7 +5,7 @@ export const checkNickname = (nickname: string) => {
     success: boolean;
     available: boolean;
     message: string;
-  }>(`/api/signup/check-nickname?nickname=${nickname}`, {
+  }>(`/signup/check-nickname?nickname=${nickname}`, {
     method: "GET",
   });
 };
