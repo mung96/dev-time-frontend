@@ -61,7 +61,7 @@ async function handleRequest(request: NextRequest): Promise<NextResponse> {
       status: response.status,
     });
   } catch (error) {
-    console.error("API Proxy Error:", error);
+    console.error("BFF_SERVER_ERROR:", error);
     return NextResponse.json(
       { error: "BFF_SERVER_ERROR", message: "BFF 서버에 오류가 발생했습니다." },
       { status: HttpStatus.INTERNAL_SERVER_ERROR },

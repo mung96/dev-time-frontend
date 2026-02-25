@@ -10,7 +10,7 @@ export const updateTimer = ({
   payload: UpdateTimerPayload;
 }) => {
   return apiRequester<UpdateTimerResponse & { message: string }>(
-    `/api/internal/timers/${timerId}`,
+    `/timers/${timerId}`,
     {
       method: "PUT",
       body: JSON.stringify(payload),

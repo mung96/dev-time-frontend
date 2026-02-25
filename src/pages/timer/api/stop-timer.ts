@@ -8,7 +8,7 @@ export const stopTimer = ({
   timerId: string;
   payload: StopTimerPayload;
 }) => {
-  return apiRequester<StopTimerResponse>(`/api/internal/timers/${timerId}`, {
+  return apiRequester<StopTimerResponse>(`/timers/${timerId}`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
