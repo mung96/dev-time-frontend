@@ -41,7 +41,7 @@ export const Dropdown = ({
     <DropdownContext.Provider
       value={{ value, isOpen, onValueChange, setIsOpen, setValue }}
     >
-      {children}
+      <div>{children}</div>
     </DropdownContext.Provider>
   );
 };
@@ -64,6 +64,12 @@ const triggerVariants = cva(
     },
   },
 );
+
+const Label = ({ children }: { children: ReactNode }) => {
+  return (
+    <label className="text-small font-medium text-gray-600">{children}</label>
+  );
+};
 
 const Trigger = ({ placeholder }: { placeholder: string }) => {
   const { isOpen, setIsOpen, value } = useDropdownContext();
@@ -95,7 +101,7 @@ const Options = ({ children }: { children: ReactNode }) => {
 
   if (!isOpen) return null;
   return (
-    <ul className="gap-4 w-full min-w-[123px]  py-4 px-3 rounded-sm border border-gray-300 bg-white flex flex-col max-h-[340px] overflow-y-scroll">
+    <ul className="gap-4 w-full min-w-[123px] mt-2  py-4 px-3 rounded-sm border border-gray-300 bg-white flex flex-col max-h-[340px] overflow-y-scroll">
       {children}
     </ul>
   );
@@ -120,3 +126,4 @@ const Option = ({ value, label, id }: Option) => {
 Dropdown.Trigger = Trigger;
 Dropdown.Options = Options;
 Dropdown.Option = Option;
+Dropdown.Label = Label;
