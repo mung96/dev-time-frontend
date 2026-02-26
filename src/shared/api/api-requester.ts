@@ -6,7 +6,7 @@ export const apiRequester = async <T = unknown>(
 ): Promise<T> => {
   const { headers, ...restOptions } = options;
 
-  const response = await fetch(BFF_PREFIX + endpoint, {
+  const response = await fetch(endpoint, {
     headers: {
       "Content-Type": "application/json",
       ...headers,

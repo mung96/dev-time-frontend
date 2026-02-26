@@ -13,8 +13,8 @@ export const PATCH = handleRequest;
 async function handleRequest(request: NextRequest): Promise<NextResponse> {
   try {
     const endPoint = request.nextUrl.pathname;
-    const apiPath = endPoint.replace(BFF_PREFIX, "");
-    const newUrl = new URL(`${API_SERVER_URL}${apiPath}`);
+    // const apiPath = endPoint.replace(BFF_PREFIX, "");
+    const newUrl = new URL(`${API_SERVER_URL}${endPoint}`);
     newUrl.search = request.nextUrl.search;
 
     const body = request.body ? await request.arrayBuffer() : null; //multipart때 안깨지도록
@@ -40,7 +40,7 @@ async function handleRequest(request: NextRequest): Promise<NextResponse> {
       }
 
       response = await fetch(
-        `${API_SERVER_URL}${apiPath}`,
+        `${API_SERVER_URL}${endPoint}`,
         createFetchOptions({
           request,
           body,
@@ -57,7 +57,8 @@ async function handleRequest(request: NextRequest): Promise<NextResponse> {
     }
 
     const responseBody = await response.json();
-    return new NextResponse(responseBody, {
+
+    return NextResponse.json(responseBody, {
       status: response.status,
     });
   } catch (error) {
