@@ -10,13 +10,17 @@ import { FormProvider, useController, useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 import { SideBanner } from "@widgets/side-banner";
-import { ProfileCreateFormValues } from "../../model/profile-create-form-values";
+import {
+  createNewProfileCreateFormValues,
+  ProfileCreateFormValues,
+} from "../../model/profile-create-form-values";
 import { Dropdown } from "@shared/ui/dropdown";
 import { Career } from "@pages/member/profile-create/model/career.enum";
+import { Purpose } from "@pages/member/profile-create/model/purpose.enum";
 
 export const ProfileCreatePage = () => {
   const methods = useForm<ProfileCreateFormValues>({
-    defaultValues: {},
+    defaultValues: createNewProfileCreateFormValues(),
     resolver: zodResolver(ProfileCreateFormValues),
     mode: "onTouched",
   });
@@ -29,6 +33,7 @@ export const ProfileCreatePage = () => {
 
   // const { mutate: signup, isPending } = useSignup();
   const { field: career } = useController({ control, name: "career" });
+  const { field: purpose } = useController({ control, name: "purpose" });
 
   return (
     <div className="flex h-full">
@@ -61,6 +66,39 @@ export const ProfileCreatePage = () => {
                     </Dropdown.Options>
                   </div>
                 </Dropdown>
+                <div className="flex flex-col gap-2">
+                  <Dropdown
+                    value={purpose.value && purpose.value.type}
+                    setValue={(v) => {
+                      console.log(v);
+                      purpose.onChange({
+                        type: v,
+                        detail:
+                          purpose.value &&
+                          purpose.value.type === Purpose.OTHER &&
+                          purpose.value.detail,
+                      });
+                    }}
+                  >
+                    <div className="flex flex-col gap-2">
+                      <Dropdown.Label>공부 목적</Dropdown.Label>
+                      <Dropdown.Trigger placeholder="공부의 목적을 선택해 주세요." />
+                      <Dropdown.Options>
+                        {Object.entries(Purpose).map(([_, v]) => (
+                          <Dropdown.Option key={v} value={v} label={v} id={v} />
+                        ))}
+                      </Dropdown.Options>
+                    </div>
+                  </Dropdown>
+                  {purpose.value && purpose.value.type === Purpose.OTHER && (
+                    <TextField id={"purpose-detail"}>
+                      <TextField.Input
+                        placeholder="내용을 입력해주세요"
+                        value={purpose.value.detail}
+                      />
+                    </TextField>
+                  )}
+                </div>
               </fieldset>
               <Button
                 priority={"primary"}

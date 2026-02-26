@@ -4,7 +4,7 @@ import { cva } from "class-variance-authority";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 type DropdownContextType = {
-  value: string;
+  value: string | null;
   setValue: (v: string) => void;
   isOpen: boolean;
   setIsOpen: (v: boolean) => void;
@@ -28,7 +28,7 @@ export const Dropdown = ({
   setValue,
 }: {
   children: ReactNode;
-  value: string;
+  value: string | null;
   setValue: (v: string) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
