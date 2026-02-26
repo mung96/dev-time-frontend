@@ -2,15 +2,17 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PATH } from "@shared/routes";
-import { Button } from "@shared/ui";
+import { Button, TextField } from "@shared/ui";
 
 import Link from "next/link";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useController, useForm } from "react-hook-form";
 
 import { useRouter } from "next/navigation";
 
 import { SideBanner } from "@widgets/side-banner";
 import { ProfileCreateFormValues } from "../../model/profile-create-form-values";
+import { Dropdown } from "@shared/ui/dropdown";
+import { Career } from "@pages/member/profile-create/model/career.enum";
 
 export const ProfileCreatePage = () => {
   const methods = useForm<ProfileCreateFormValues>({
@@ -22,9 +24,11 @@ export const ProfileCreatePage = () => {
   const {
     handleSubmit,
     formState: { isValid },
+    control,
   } = methods;
 
   // const { mutate: signup, isPending } = useSignup();
+  const { field: career } = useController({ control, name: "career" });
 
   return (
     <div className="flex h-full">
@@ -45,7 +49,19 @@ export const ProfileCreatePage = () => {
               <h2 className="text-heading text-primary text-center">
                 프로필 설정
               </h2>
-              <fieldset className="flex flex-col gap-10"></fieldset>
+              <fieldset className="flex flex-col gap-10">
+                <Dropdown value={career.value} setValue={career.onChange}>
+                  <div className="flex flex-col gap-2">
+                    <Dropdown.Label>개발 경력</Dropdown.Label>
+                    <Dropdown.Trigger placeholder="개발 경력을 선택해 주세요." />
+                    <Dropdown.Options>
+                      {Object.entries(Career).map(([_, v]) => (
+                        <Dropdown.Option key={v} value={v} label={v} id={v} />
+                      ))}
+                    </Dropdown.Options>
+                  </div>
+                </Dropdown>
+              </fieldset>
               <Button
                 priority={"primary"}
                 type="submit"
