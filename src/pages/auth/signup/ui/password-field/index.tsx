@@ -11,7 +11,7 @@ export const PasswordField = () => {
   return (
     <TextField id={"password"} error={errors.password?.message}>
       <div className="flex flex-col gap-2">
-        <TextField.Label label="비밀번호" />
+        <TextField.Label>비밀번호</TextField.Label>
         <div className="flex gap-3">
           <TextField.Input
             type="password"

@@ -28,7 +28,7 @@ export const NicknameField = ({
         }
       >
         <div className="flex flex-col gap-2">
-          <TextField.Label label="닉네임" />
+          <TextField.Label>닉네임</TextField.Label>
           <div className="flex gap-3">
             <TextField.Input
               placeholder="닉네임을 입력해 주세요."

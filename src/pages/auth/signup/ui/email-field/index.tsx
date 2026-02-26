@@ -25,7 +25,7 @@ export const EmailField = ({
       success={isValidDuplicateEmail ? "사용 가능한 이메일입니다." : undefined}
     >
       <div className="flex flex-col gap-2">
-        <TextField.Label label="아이디" />
+        <TextField.Label>아이디</TextField.Label>
         <div className="flex gap-3">
           <TextField.Input
             placeholder="이메일 주소 형식으로 입력해 주세요."
