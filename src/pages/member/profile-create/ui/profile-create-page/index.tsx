@@ -34,6 +34,7 @@ export const ProfileCreatePage = () => {
   // const { mutate: signup, isPending } = useSignup();
   const { field: career } = useController({ control, name: "career" });
   const { field: purpose } = useController({ control, name: "purpose" });
+  const { field: goal } = useController({ control, name: "goal" });
 
   return (
     <div className="flex h-full">
@@ -98,6 +99,16 @@ export const ProfileCreatePage = () => {
                       />
                     </TextField>
                   )}
+                  <TextField id={"goal"}>
+                    <div className="flex flex-col gap-2">
+                      <TextField.Label>공부 목표</TextField.Label>
+                      <TextField.Input
+                        placeholder="내용을 입력해주세요"
+                        value={goal.value}
+                        onChange={goal.onChange}
+                      />
+                    </div>
+                  </TextField>
                 </div>
               </fieldset>
               <Button

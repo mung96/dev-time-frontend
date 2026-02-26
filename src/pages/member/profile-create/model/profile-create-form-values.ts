@@ -23,6 +23,7 @@ const PurposeSchema = z.discriminatedUnion("type", [
 export const ProfileCreateFormValues = z.object({
   career: z.enum(Career).nullable(),
   purpose: PurposeSchema.nullable(),
+  goal: z.string(),
 });
 
 export type ProfileCreateFormValues = z.infer<typeof ProfileCreateFormValues>;
@@ -31,5 +32,6 @@ export const createNewProfileCreateFormValues = (): ProfileCreateFormValues => {
   return {
     career: null,
     purpose: null,
+    goal: "",
   };
 };

@@ -36,12 +36,12 @@ export const TextField = ({
   );
 };
 
-const Label = ({ label }: { label: string }) => {
+const Label = ({ children }: { children: ReactNode }) => {
   const { id } = useTextFieldContext();
 
   return (
     <label htmlFor={id} className="text-small font-medium text-gray-600">
-      {label}
+      {children}
     </label>
   );
 };
