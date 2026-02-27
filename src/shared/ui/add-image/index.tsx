@@ -1,4 +1,6 @@
+import { cn } from "@shared/lib/tailwind";
 import { presignedUrlCreate } from "@shared/ui/add-image/presigned-url-create";
+import { Plus } from "@shared/ui/icons";
 import { ChangeEvent, useRef, useState } from "react";
 
 const extractBaseUrl = (presignedUrl: string) => {
@@ -6,8 +8,8 @@ const extractBaseUrl = (presignedUrl: string) => {
 };
 
 const MAX_FILE_BYTE = 5 * 1024 * 1024; //5MB
+const FILE_TYPE_LIST = ["image/png", "image/jpg", "image/jpeg"];
 
-const accept = ["image/png", "image/jpg", "image/jpeg"];
 export const AddImage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState("");
@@ -18,8 +20,14 @@ export const AddImage = () => {
     const file = e.target.files[0];
 
     //예외 케이스
-    if (!accept.includes(file.type)) alert("확장자는 jpg, png만 가능합니다");
-    if (file.size > MAX_FILE_BYTE) alert("파일은 최대 5MB 까지 가능합니다");
+    if (!FILE_TYPE_LIST.includes(file.type)) {
+      alert("확장자는 jpg, png만 가능합니다");
+      return;
+    }
+    if (file.size > MAX_FILE_BYTE) {
+      alert("파일은 최대 5MB 까지 가능합니다");
+      return;
+    }
 
     //presignedUrl 받아오기
     const { presignedUrl, key } = await presignedUrlCreate({
@@ -43,24 +51,30 @@ export const AddImage = () => {
   };
 
   return (
-    <div>
-      <input
-        type="file"
-        accept="image/png, image/jpg, image/jpeg"
-        className="hidden"
-        ref={inputRef}
-        onChange={handleImageUpload}
-      />
-
-      <picture className="w-30 h-30 block">
-        <img src={url} alt="이미지" className="w-full h-full" />
-      </picture>
+    <div className={cn("w-30 h-30 cursor-pointer relative")}>
       <div
-        className="w-30 h-30 flex items-center justify-center border cursor-pointer"
+        className="w-30 h-30 flex items-center justify-center border rounded-md border-primary border-dashed"
+        role="presentation"
+        tabIndex={0}
         onClick={() => inputRef.current?.click()}
       >
-        클릭
+        <input
+          type="file"
+          accept="image/png, image/jpg, image/jpeg"
+          className="hidden"
+          ref={inputRef}
+          onChange={handleImageUpload}
+        />
+
+        <Plus className="w-6 h-6 text-primary" />
       </div>
+      {url && (
+        <div className="w-30 h-30 absolute top-0 left-0 overflow-hidden">
+          <picture className="w-30 h-30 block">
+            <img src={url} alt="이미지" className="w-full h-full" />
+          </picture>
+        </div>
+      )}
     </div>
   );
 };

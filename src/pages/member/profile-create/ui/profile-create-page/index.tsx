@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PATH } from "@shared/routes";
-import { Button, TextField } from "@shared/ui";
+import { AddImage, Button, TextField } from "@shared/ui";
 
 import Link from "next/link";
 import { FormProvider, useController, useForm } from "react-hook-form";
@@ -42,6 +42,8 @@ export const ProfileCreatePage = () => {
       <div className="flex-1 flex justify-center w-full">
         <div className="flex flex-col items-center gap-6">
           <FormProvider {...methods}>
+            <AddImage />
+
             <form
               className="mt-[140px] w-105 flex flex-col gap-6"
               onSubmit={(e) => {
