@@ -3,7 +3,7 @@ import { apiRequester } from "@shared/api/api-requester";
 import z from "zod";
 
 export const getTimer = async () => {
-  const response = await apiRequester<TimerResponse>(`/timers`, {
+  const response = await apiRequester<TimerResponse>(`/api/timers`, {
     method: "GET",
   });
 
