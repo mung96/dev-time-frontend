@@ -24,6 +24,7 @@ export const ProfileCreateFormValues = z.object({
   career: z.enum(Career).nullable(),
   purpose: PurposeSchema.nullable(),
   goal: z.string(),
+  profileImage: z.string(),
 });
 
 export type ProfileCreateFormValues = z.infer<typeof ProfileCreateFormValues>;
@@ -33,5 +34,6 @@ export const createNewProfileCreateFormValues = (): ProfileCreateFormValues => {
     career: null,
     purpose: null,
     goal: "",
+    profileImage: "",
   };
 };

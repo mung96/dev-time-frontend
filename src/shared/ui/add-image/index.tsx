@@ -10,7 +10,10 @@ const extractBaseUrl = (presignedUrl: string) => {
 const MAX_FILE_BYTE = 5 * 1024 * 1024; //5MB
 const FILE_TYPE_LIST = ["image/png", "image/jpg", "image/jpeg"];
 
-export const AddImage = () => {
+type AddImageProps = {
+  setKey: (v: string) => void;
+};
+export const AddImage = ({ setKey }: AddImageProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [url, setUrl] = useState("");
 
@@ -47,6 +50,7 @@ export const AddImage = () => {
     e.target.value = "";
     if (!response.ok) throw new Error("S3 업로드에 실패했습니다.");
 
+    setKey(key);
     setUrl(extractBaseUrl(presignedUrl));
   };
 
@@ -71,7 +75,7 @@ export const AddImage = () => {
       {url && (
         <div className="w-30 h-30 absolute top-0 left-0 overflow-hidden">
           <picture className="w-30 h-30 block">
-            <img src={url} alt="이미지" className="w-full h-full" />
+            <img src={url} alt="프로필 이미지" className="w-full h-full" />
           </picture>
         </div>
       )}

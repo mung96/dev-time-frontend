@@ -35,6 +35,10 @@ export const ProfileCreatePage = () => {
   const { field: career } = useController({ control, name: "career" });
   const { field: purpose } = useController({ control, name: "purpose" });
   const { field: goal } = useController({ control, name: "goal" });
+  const { field: profileImage } = useController({
+    control,
+    name: "profileImage",
+  });
 
   return (
     <div className="flex h-full">
@@ -42,8 +46,6 @@ export const ProfileCreatePage = () => {
       <div className="flex-1 flex justify-center w-full">
         <div className="flex flex-col items-center gap-6">
           <FormProvider {...methods}>
-            <AddImage />
-
             <form
               className="mt-[140px] w-105 flex flex-col gap-6"
               onSubmit={(e) => {
@@ -111,6 +113,14 @@ export const ProfileCreatePage = () => {
                       />
                     </div>
                   </TextField>
+
+                  <div className="flex flex-col gap-2">
+                    <label>프로필 이미지</label>
+                  </div>
+                  <div className="flex gap-3 items-end">
+                    <AddImage setKey={profileImage.onChange} />
+                    <span>5MB 미만의 .png, .jpg 파일</span>
+                  </div>
                 </div>
               </fieldset>
               <Button
