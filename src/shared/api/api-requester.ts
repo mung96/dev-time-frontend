@@ -1,12 +1,11 @@
-import { BFF_PREFIX } from "../api/config";
-
 export const apiRequester = async <T = unknown>(
   endpoint: string,
-  options: RequestInit,
+  options: RequestInit & { queryParams?: Record<string, string> },
 ): Promise<T> => {
-  const { headers, ...restOptions } = options;
+  const { headers, queryParams, ...restOptions } = options;
 
-  const response = await fetch(endpoint, {
+  const query = queryParams ? `?${new URLSearchParams(queryParams)}` : "";
+  const response = await fetch(endpoint + query, {
     headers: {
       "Content-Type": "application/json",
       ...headers,
