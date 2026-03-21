@@ -5,7 +5,7 @@ export const checkEmail = (email: string) => {
     success: boolean;
     available: boolean;
     message: string;
-  }>(`/signup/check-email?email=${email}`, {
+  }>(`/api/signup/check-email?email=${email}`, {
     method: "GET",
   });
 };

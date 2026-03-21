@@ -8,7 +8,7 @@ type LoginResponse = {
   isDuplicateLogin: boolean;
 };
 export const login = (payload: LoginFormValues) => {
-  return apiRequester<LoginResponse>(`/login`, {
+  return apiRequester<LoginResponse>(`/api/auth/login`, {
     method: "POST",
     body: JSON.stringify(payload),
   });

@@ -5,7 +5,7 @@ type DeleteTimerPathParams = ApiPathParams<"/api/timers/{timerId}", "delete">;
 type DeleteTimerResponse = ApiResponse<"/api/timers/{timerId}", "delete">;
 
 export const deleteTimer = ({ timerId }: DeleteTimerPathParams) => {
-  return apiRequester<DeleteTimerResponse>(`/timers/${timerId}`, {
+  return apiRequester<DeleteTimerResponse>(`/api/timers/${timerId}`, {
     method: "DELETE",
   });
 };

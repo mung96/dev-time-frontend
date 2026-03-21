@@ -6,7 +6,7 @@ export const signup = (payload: SignUpFormValues) => {
     success: boolean;
     available: boolean;
     message: string;
-  }>(`/signup`, {
+  }>(`/api/signup`, {
     method: "POST",
     body: JSON.stringify(payload),
   });

@@ -3,7 +3,7 @@ import z from "zod";
 
 export const getStudyLogDetail = async (studyLogId: string) => {
   const response = await apiRequester<StudyLogDetailResponse>(
-    `/study-logs/${studyLogId}`,
+    `/api/study-logs/${studyLogId}`,
     {
       method: "GET",
     },

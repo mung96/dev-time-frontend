@@ -1,18 +1,7 @@
-/**
- * OpenAPI 타입 헬퍼 유틸리티
- *
- * 자동 생성된 OpenAPI 타입을 쉽게 추출하기 위한 헬퍼 타입들
- */
-
 import type { paths } from "./generated";
 
 /**
  * API 응답 타입 추출 헬퍼
- *
- * @template Path - API 경로 (예: '/api/signup/check-email')
- * @template Method - HTTP 메서드 (예: 'get', 'post')
- * @template Status - HTTP 상태 코드 (기본값: 200)
- *
  * @example
  * ```ts
  * type CheckEmailResponse = ApiResponse<'/api/signup/check-email', 'get'>;
@@ -23,7 +12,7 @@ import type { paths } from "./generated";
 export type ApiResponse<
   Path extends keyof paths,
   Method extends keyof paths[Path],
-  Status extends number = 200
+  Status extends number = 200,
 > = paths[Path][Method] extends {
   responses: Record<Status, { content: { "application/json": infer T } }>;
 }
@@ -32,10 +21,6 @@ export type ApiResponse<
 
 /**
  * API 요청 타입 추출 헬퍼
- *
- * @template Path - API 경로
- * @template Method - HTTP 메서드
- *
  * @example
  * ```ts
  * type LoginRequest = ApiRequest<'/api/auth/login', 'post'>;
@@ -44,7 +29,7 @@ export type ApiResponse<
  */
 export type ApiRequest<
   Path extends keyof paths,
-  Method extends keyof paths[Path]
+  Method extends keyof paths[Path],
 > = paths[Path][Method] extends {
   requestBody: { content: { "application/json": infer T } };
 }
@@ -53,10 +38,6 @@ export type ApiRequest<
 
 /**
  * API 쿼리 파라미터 타입 추출 헬퍼
- *
- * @template Path - API 경로
- * @template Method - HTTP 메서드
- *
  * @example
  * ```ts
  * type CheckEmailParams = ApiQueryParams<'/api/signup/check-email', 'get'>;
@@ -65,8 +46,10 @@ export type ApiRequest<
  */
 export type ApiQueryParams<
   Path extends keyof paths,
-  Method extends keyof paths[Path]
-> = paths[Path][Method] extends { parameters: { query: infer T } } ? T : never;
+  Method extends keyof paths[Path],
+> = paths[Path][Method] extends { parameters: { query?: infer T } }
+  ? T
+  : never;
 
 /**
  * API 경로 파라미터 타입 추출 헬퍼
@@ -82,5 +65,5 @@ export type ApiQueryParams<
  */
 export type ApiPathParams<
   Path extends keyof paths,
-  Method extends keyof paths[Path]
+  Method extends keyof paths[Path],
 > = paths[Path][Method] extends { parameters: { path: infer T } } ? T : never;
