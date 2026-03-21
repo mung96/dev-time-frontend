@@ -14,7 +14,7 @@ const useAutoCompleteContext = () => {
   const context = useContext(AutoCompleteContext);
 
   if (!context) {
-    throw new Error("dropdown provider 내부에서 사용해야합니다.");
+    throw new Error("AutoCompleteProvider 내부에서 사용해야합니다.");
   }
 
   return context;
@@ -83,12 +83,17 @@ const Options = ({ children }: { children: ReactNode }) => {
 };
 
 const Option = ({ value, label, id }: Option) => {
-  const { value: selectedValue, onValueChange } = useAutoCompleteContext();
+  const { value: inputValue, onValueChange } = useAutoCompleteContext();
+
+  // api가 keyword를 가지고있어서 필요없는 로직
+  // if (!value.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
+  //   return null;
+
   return (
     <li
       className={cn(
         "w-full min-w-[123px] h-9 shrink-0 text-body font-medium border-b text-gray-800 border-b-gray-300",
-        selectedValue === value && "text-indigo",
+        inputValue === value && "text-indigo",
       )}
       id={id}
       onClick={() => onValueChange(value)}
@@ -98,6 +103,7 @@ const Option = ({ value, label, id }: Option) => {
   );
 };
 
+//TODO: addNewItem을 추가해야함
 const AddNewItem = () => {
   return (
     <button
@@ -115,3 +121,4 @@ AutoComplete.Input = AutoCompleteInput;
 AutoComplete.Options = Options;
 AutoComplete.Option = Option;
 AutoComplete.Label = Label;
+AutoComplete.AddNewItem = AddNewItem;

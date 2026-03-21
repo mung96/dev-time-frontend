@@ -25,6 +25,7 @@ export const ProfileCreateFormValues = z.object({
   purpose: PurposeSchema.nullable(),
   goal: z.string(),
   profileImage: z.string(),
+  techStacks: z.array(z.object({ value: z.string() })),
 });
 
 export type ProfileCreateFormValues = z.infer<typeof ProfileCreateFormValues>;
@@ -35,5 +36,6 @@ export const createNewProfileCreateFormValues = (): ProfileCreateFormValues => {
     purpose: null,
     goal: "",
     profileImage: "",
+    techStacks: [],
   };
 };

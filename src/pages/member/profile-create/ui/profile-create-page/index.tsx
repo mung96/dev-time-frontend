@@ -5,7 +5,12 @@ import { PATH } from "@shared/routes";
 import { AddImage, Button, TextField } from "@shared/ui";
 
 import Link from "next/link";
-import { FormProvider, useController, useForm } from "react-hook-form";
+import {
+  FormProvider,
+  useController,
+  useFieldArray,
+  useForm,
+} from "react-hook-form";
 
 import { useRouter } from "next/navigation";
 

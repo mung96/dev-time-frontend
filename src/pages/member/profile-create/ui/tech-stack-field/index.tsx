@@ -3,8 +3,10 @@
 import { techStacksQueries } from "@pages/member/profile-create/api/tech-stacks.query";
 import { useTechStackCreate } from "@pages/member/profile-create/api/use-tech-stack-create";
 import { AutoComplete } from "@shared/ui/autocomplete";
+import { Chip } from "@shared/ui/chip";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 export const TechStackField = () => {
   const [keyword, setKeyword] = useState("");
@@ -12,6 +14,12 @@ export const TechStackField = () => {
     techStacksQueries.list({ keyword }),
   );
   const { mutate: techStacksCreate } = useTechStackCreate();
+
+  const { control } = useFormContext();
+  const { fields: selectedTechStacks } = useFieldArray({
+    control,
+    name: "techStacks",
+  });
 
   return (
     <AutoComplete value={keyword} setValue={setKeyword}>
@@ -26,7 +34,12 @@ export const TechStackField = () => {
             id={techStack.id}
           />
         ))}
+        {techStackListData.results.length === 0 && <AutoComplete.AddNewItem />}
       </AutoComplete.Options>
+
+      {/* {selectedTechStacks.map((selectedTechStack, idx) => (
+        // <Chip key={selectedTechStack.id}>{selectedTechStack}</Chip>
+      ))} */}
     </AutoComplete>
   );
 };
