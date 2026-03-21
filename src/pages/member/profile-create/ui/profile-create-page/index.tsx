@@ -17,6 +17,7 @@ import {
 import { Dropdown } from "@shared/ui/dropdown";
 import { Career } from "@pages/member/profile-create/model/career.enum";
 import { Purpose } from "@pages/member/profile-create/model/purpose.enum";
+import { TechStackField } from "@pages/member/profile-create/ui/tech-stack-field";
 
 export const ProfileCreatePage = () => {
   const methods = useForm<ProfileCreateFormValues>({
@@ -121,6 +122,8 @@ export const ProfileCreatePage = () => {
                     <AddImage setKey={profileImage.onChange} />
                     <span>5MB 미만의 .png, .jpg 파일</span>
                   </div>
+
+                  <TechStackField />
                 </div>
               </fieldset>
               <Button

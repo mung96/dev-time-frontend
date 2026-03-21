@@ -2,32 +2,31 @@
 
 import { techStacksQueries } from "@pages/member/profile-create/api/tech-stacks.query";
 import { useTechStackCreate } from "@pages/member/profile-create/api/use-tech-stack-create";
+import { AutoComplete } from "@shared/ui/autocomplete";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 export const TechStackField = () => {
   const [keyword, setKeyword] = useState("");
-  const { data } = useSuspenseQuery(techStacksQueries.list({ keyword }));
+  const { data: techStackListData } = useSuspenseQuery(
+    techStacksQueries.list({ keyword }),
+  );
   const { mutate: techStacksCreate } = useTechStackCreate();
 
   return (
-    <div>
-      <input value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-      {data.results.map((item) => (
-        <div key={item.id}>{item.name}</div>
-      ))}
+    <AutoComplete value={keyword} setValue={setKeyword}>
+      <AutoComplete.Input placeholder="선택" />
 
-      <button
-        onClick={() =>
-          techStacksCreate({
-            request: {
-              name: keyword,
-            },
-          })
-        }
-      >
-        생성
-      </button>
-    </div>
+      <AutoComplete.Options>
+        {techStackListData.results.map((techStack) => (
+          <AutoComplete.Option
+            key={techStack.id}
+            value={techStack.id} //format 라이브러리 설치
+            label={techStack.name}
+            id={techStack.id}
+          />
+        ))}
+      </AutoComplete.Options>
+    </AutoComplete>
   );
 };
