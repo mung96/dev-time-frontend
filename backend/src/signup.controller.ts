@@ -44,11 +44,15 @@ export class SignupController {
     description: '확인할 닉네임',
     example: '데품타',
   })
-  checkNickname(@Query('nickname') nickname: string): ServiceApiResponse<{
-    available: boolean;
-  }> {
+  async checkNickname(@Query('nickname') nickname: string): Promise<
+    ServiceApiResponse<{
+      available: boolean;
+    }>
+  > {
+    const isDuplicate = await this.signupService.checkNickname(nickname);
+
     return ServiceApiResponse.success('사용 가능한 닉네임입니다.', {
-      available: true,
+      available: !isDuplicate,
     });
   }
 }
