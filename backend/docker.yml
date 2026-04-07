@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: devtime-db
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: devtime
+    volumes:
+      - devtime-data:/var/lib/postgresql/data
+
+volumes:
+  devtime-data:
