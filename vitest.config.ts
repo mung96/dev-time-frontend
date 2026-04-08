@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'vitest/config';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 
@@ -16,6 +17,7 @@ export default defineConfig({
     projects: [
       {
         extends: true,
+        plugins: [tsconfigPaths()],
         test: {
           name: 'unit',
           environment: 'jsdom',
