@@ -1,8 +1,8 @@
 import { server } from "@app/mocks/server";
 import "@testing-library/jest-dom/vitest";
 
-import { vi } from "vitest";
 import { afterAll, afterEach, beforeAll } from "vitest";
+import { vi } from "vitest";
 
 const useRouter = vi.fn(() => {
   push: vi.fn();
