@@ -17,13 +17,13 @@ export const TermsAgreementField = ({}) => {
   return (
     <section className="flex flex-col gap-2">
       <div className="flex justify-between">
-        <span>이용약관</span>
+        <p>이용약관</p>
         <div className="flex gap-1 items-center">
           <label
             htmlFor="terms"
             className={cn(
               "text-small text-medium text-primary/30",
-              isTermsAgreementChecked && "text-primary/100"
+              isTermsAgreementChecked && "text-primary/100",
             )}
           >
             동의함
