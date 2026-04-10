@@ -1,6 +1,6 @@
 import { apiRequester } from "@shared/api/api-requester";
 
-export const CHECK_NICKNAME_ENDPOINT = `/api/signup/check-email`;
+export const CHECK_NICKNAME_ENDPOINT = `/api/signup/check-nickname`;
 
 export const checkNickname = (nickname: string) => {
   return apiRequester<{
