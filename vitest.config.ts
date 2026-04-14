@@ -2,6 +2,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { defineConfig } from 'vitest/config';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 
@@ -14,6 +15,16 @@ const dirname =
 export default defineConfig({
   test: {
     projects: [
+      {
+        extends: true,
+        plugins: [tsconfigPaths()],
+        test: {
+          name: 'unit',
+          environment: 'jsdom',
+          include: ['src/**/*.test.{ts,tsx}'],
+          setupFiles: ['./vitest.setup.ts'],
+        },
+      },
       {
         extends: true,
         plugins: [
