@@ -9,9 +9,9 @@ import { PATH } from "@shared/routes";
 import { Button } from "@shared/ui";
 
 import Link from "next/link";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useController, useForm } from "react-hook-form";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { EmailField } from "@pages/auth/signup/ui/email-field";
@@ -22,6 +22,8 @@ import { TermsAgreementField } from "@pages/auth/signup/ui/term-agreement-field"
 import { useSignup } from "@pages/auth/signup/model/use-signup";
 
 import { SideBanner } from "@widgets/side-banner";
+import { checkEmail } from "@pages/auth/signup/api/check-email";
+import { ApiError, HttpStatus } from "@shared/api";
 
 export const SignupPage = () => {
   const methods = useForm<SignUpFormValues>({
@@ -38,7 +40,9 @@ export const SignupPage = () => {
   const router = useRouter();
   const {
     handleSubmit,
-    formState: { isValid },
+    control,
+    setError,
+    formState: { isValid, errors },
   } = methods;
   const [isValidDuplicateEmail, setIsValidDuplicateEmail] = useState(false);
   const [isValidDuplicateNickname, setIsValidDuplicateNickname] =
@@ -49,6 +53,35 @@ export const SignupPage = () => {
   const isFormValid =
     isValidDuplicateEmail && isValidDuplicateNickname && isValid;
 
+  const { field: emailField } = useController({
+    control,
+    name: "email",
+  });
+
+  const checkDuplicateEmail = () => {
+    const email = emailField.value;
+    checkEmail(email)
+      .then((response) => {
+        if (response.available) {
+          setIsValidDuplicateEmail(true);
+        } else {
+          setError("email", {
+            type: "duplicate",
+            message: response.message,
+          });
+        }
+      })
+      .catch((error) => {
+        if (error instanceof ApiError) {
+          if (error.status === HttpStatus.BAD_REQUEST) {
+            setError("email", {
+              type: "invalid_format",
+              message: error.message,
+            });
+          }
+        }
+      });
+  };
   return (
     <div className="flex h-full">
       <SideBanner />
@@ -72,7 +105,14 @@ export const SignupPage = () => {
                 {/* 이메일 */}
                 <EmailField
                   isValidDuplicateEmail={isValidDuplicateEmail}
-                  setIsValidDuplicateEmail={setIsValidDuplicateEmail}
+                  value={emailField.value}
+                  errorMessage={errors.email?.message}
+                  successMessage={"사용 가능한 이메일입니다."}
+                  onChange={(e) => emailField.onChange(e.target.value)}
+                  isCheckDisabled={
+                    !emailField.value || errors.email?.type === "invalid_format"
+                  }
+                  checkDuplicateEmail={checkDuplicateEmail}
                 />
                 {/* 닉네임 */}
                 <NicknameField

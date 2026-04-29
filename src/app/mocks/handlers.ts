@@ -1,1 +1,3 @@
-export const handlers = [];
+import { signupHandlers } from "./signup-handlers";
+
+export const handlers = [...signupHandlers];

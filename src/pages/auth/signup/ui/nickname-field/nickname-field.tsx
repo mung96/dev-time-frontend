@@ -37,6 +37,7 @@ export const NicknameField = ({
               })}
             />
             <TextField.Button
+              aria-label="닉네임 중복 확인"
               type="button"
               disabled={
                 !touchedFields.nickname ||
