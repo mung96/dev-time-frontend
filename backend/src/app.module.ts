@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Member } from 'src/member/member.entity';
-import { SignupController } from 'src/signup/signup.controller';
-import { SignupService } from 'src/signup/signup.service';
+import { Member } from 'src/member.entity';
+import { SignupController } from 'src/signup.controller';
+import { SignupService } from 'src/signup.service';
 
 @Module({
   imports: [
