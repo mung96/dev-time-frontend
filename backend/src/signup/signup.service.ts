@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
-import { Member } from 'src/member.entity';
-import { SignupRequest } from 'src/signup-request';
+import { Member } from 'src/member/member.entity';
+import { SignupRequest } from 'src/signup/signup-request';
 import { Repository } from 'typeorm';
 
 @Injectable()

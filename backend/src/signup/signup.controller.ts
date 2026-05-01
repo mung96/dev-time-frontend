@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ServiceApiResponse } from 'src/global/service-api-response';
-import { SignupRequest } from 'src/signup-request';
-import { SignupService } from 'src/signup.service';
+import { SignupRequest } from 'src/signup/signup-request';
+import { SignupService } from 'src/signup/signup.service';
 
 @Controller('api/signup')
 @ApiTags('api/signup')
