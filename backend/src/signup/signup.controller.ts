@@ -50,8 +50,11 @@ export class SignupController {
     }>
   > {
     const isDuplicate = await this.signupService.checkNickname(nickname);
+    const message = isDuplicate
+      ? '닉네임이 중복됩니다. 다시 입력해주세요'
+      : '사용 가능한 닉네임입니다.';
 
-    return ServiceApiResponse.success('사용 가능한 닉네임입니다.', {
+    return ServiceApiResponse.success(message, {
       available: !isDuplicate,
     });
   }
