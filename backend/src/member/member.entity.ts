@@ -9,6 +9,6 @@ export class Member extends BaseModel {
   @Column({ nullable: false, unique: true })
   nickname: string;
 
-  @Column({ nullable: false, unique: true })
+  @Column({ nullable: false, unique: true, select: false })
   password: string;
 }
