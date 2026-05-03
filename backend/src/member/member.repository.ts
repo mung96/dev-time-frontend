@@ -6,6 +6,10 @@ import { DuplicateNicknameException } from 'src/common/exception/duplicate-nickn
 import { Member } from 'src/member/member.entity';
 import { QueryFailedError, Repository } from 'typeorm';
 
+const PG_UNIQUE_VIOLATION = '23505';
+const UQ_MEMBER_EMAIL = 'UQ_MEMBER_EMAIL';
+const UQ_MEMBER_NICKNAME = 'UQ_MEMBER_NICKNAME';
+
 @Injectable()
 export class MemberRepository {
   constructor(
@@ -30,15 +34,14 @@ export class MemberRepository {
       await this.repository.save(member);
     } catch (error) {
       if (error instanceof QueryFailedError) {
-        // TODO: 타입 단언 말고 방법이 없나?
-        const { code, detail } = error.driverError as {
+        const { code, constraint } = error.driverError as {
           code: string;
-          detail: string;
+          constraint: string;
         };
-        if (code === '23505') {
-          if (detail?.includes('email'))
+        if (code === PG_UNIQUE_VIOLATION) {
+          if (constraint === UQ_MEMBER_EMAIL)
             throw new DuplicateEmailException(member.email);
-          if (detail?.includes('nickname'))
+          if (constraint === UQ_MEMBER_NICKNAME)
             throw new DuplicateNicknameException(member.nickname);
         }
       }
