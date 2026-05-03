@@ -6,7 +6,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ValidationException } from 'src/global/exception/validation.exception';
+import { DataAccessException } from 'src/common/exception/data-access.exception';
+import { ValidationException } from 'src/common/exception/validation.exception';
 import { ServiceApiResponse } from 'src/global/service-api-response';
 
 @Catch()
@@ -23,7 +24,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         .json(ServiceApiResponse.fail(exception.message));
     }
 
-    // TODO: 404등등 추가 처리 필요
+    if (exception instanceof DataAccessException) {
+      this.logger.error(exception.message, (exception as Error).stack);
+      return response
+        .status(500)
+        .json(ServiceApiResponse.fail('데이터 처리 중 오류가 발생했습니다.'));
+    }
+
+    // NestJS 내부 예외 (ValidationPipe 등)
     if (exception instanceof HttpException) {
       return response
         .status(exception.getStatus())
