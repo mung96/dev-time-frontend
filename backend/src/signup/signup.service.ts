@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { hash } from 'bcrypt';
-import { DuplicateEmailException } from 'src/common/exception/duplicate-email.exception';
-import { DuplicateNicknameException } from 'src/common/exception/duplicate-nickname.exception';
 import { PasswordMismatchException } from 'src/common/exception/password-mismatch.exception';
 import { MemberRepository } from 'src/member/member.repository';
 import { SignupRequest } from 'src/signup/signup-request';
@@ -14,7 +12,7 @@ export class SignupService {
     const { email, nickname, password, confirmPassword } = signupRequest;
 
     // 회원가입 데이터 검증
-    await this.validateSignup({ email, nickname, password, confirmPassword });
+    this.validateSignup({ password, confirmPassword });
 
     // 비밀번호 암호화
     const hashedPassword = await hash(password, 10);
@@ -38,25 +36,15 @@ export class SignupService {
     return !!member;
   }
 
-  private async validateSignup({
-    email,
-    nickname,
+  private validateSignup({
     password,
     confirmPassword,
   }: {
-    email: string;
-    nickname: string;
     password: string;
     confirmPassword: string;
   }) {
     if (password !== confirmPassword) {
       throw new PasswordMismatchException();
     }
-
-    const byEmail = await this.memberRepository.findByEmail(email);
-    if (byEmail) throw new DuplicateEmailException(email);
-
-    const byNickname = await this.memberRepository.findByNickname(nickname);
-    if (byNickname) throw new DuplicateNicknameException(nickname);
   }
 }
