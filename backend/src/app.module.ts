@@ -1,19 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthController } from 'src/auth/auth.controller';
-import { AuthService } from 'src/auth/auth.service';
-import { Member } from 'src/member/member.entity';
-import { MemberRepository } from 'src/member/member.repository';
-import { SignupController } from 'src/signup/signup.controller';
-import { SignupService } from 'src/signup/signup.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { MemberModule } from 'src/member/member.module';
+import { SignupModule } from 'src/signup/signup.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forFeature([Member]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -28,8 +24,9 @@ import { SignupService } from 'src/signup/signup.service';
         logging: true,
       }),
     }),
+    MemberModule,
+    AuthModule,
+    SignupModule,
   ],
-  controllers: [SignupController, AuthController],
-  providers: [SignupService, AuthService, MemberRepository],
 })
 export class AppModule {}
