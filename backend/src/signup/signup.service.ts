@@ -16,11 +16,11 @@ export class SignupService {
     const { email, nickname, password, confirmPassword } = signupRequest;
 
     //이메일, 닉네임 중복검사
-    const members = await this.memberRepository.find({
+    const member = await this.memberRepository.findOne({
       where: [{ email }, { nickname }],
     });
 
-    if (members.length > 0) {
+    if (member) {
       throw new BadRequestException(
         '이메일 또는 닉네임이 중복됩니다. 다시 입력해주세요',
       );
@@ -43,24 +43,22 @@ export class SignupService {
   }
 
   async checkEmail(email: string): Promise<boolean> {
-    const member = await this.memberRepository.find({
+    const member = await this.memberRepository.findOne({
       where: {
         email,
       },
     });
 
-    return member.length > 0;
+    return !!member;
   }
 
   async checkNickname(nickname: string): Promise<boolean> {
-    const member = await this.memberRepository.find({
+    const member = await this.memberRepository.findOne({
       where: {
         nickname: nickname,
       },
     });
 
-    const isDuplicateNickname = member.length > 0;
-
-    return isDuplicateNickname;
+    return !!member;
   }
 }
