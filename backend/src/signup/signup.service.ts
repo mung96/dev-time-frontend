@@ -1,55 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
-import { DuplicateEmailException } from 'src/global/exception/duplicate-email.exception';
-import { DuplicateNicknameException } from 'src/global/exception/duplicate-nickname.exception';
-import { PasswordMismatchException } from 'src/global/exception/password-mismatch.exception';
-import { Member } from 'src/member/member.entity';
+import { DuplicateEmailException } from 'src/common/exception/duplicate-email.exception';
+import { DuplicateNicknameException } from 'src/common/exception/duplicate-nickname.exception';
+import { PasswordMismatchException } from 'src/common/exception/password-mismatch.exception';
+import { MemberRepository } from 'src/member/member.repository';
 import { SignupRequest } from 'src/signup/signup-request';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class SignupService {
-  constructor(
-    @InjectRepository(Member)
-    private readonly memberRepository: Repository<Member>,
-  ) {}
+  constructor(private readonly memberRepository: MemberRepository) {}
 
   async signup(signupRequest: SignupRequest): Promise<void> {
     const { email, nickname, password, confirmPassword } = signupRequest;
 
-    // 회원가입 유효성 검사
+    // 회원가입 데이터 검증
     await this.validateSignup({ email, nickname, password, confirmPassword });
 
-    //암호화
+    // 비밀번호 암호화
     const hashedPassword = await hash(password, 10);
 
-    // 저장
-    const newMember = this.memberRepository.create({
+    // 회원가입
+    const member = this.memberRepository.create({
       email,
       nickname,
       password: hashedPassword,
     });
-    await this.memberRepository.save(newMember);
+    await this.memberRepository.save(member);
   }
 
   async checkEmail(email: string): Promise<boolean> {
-    const member = await this.memberRepository.findOne({
-      where: {
-        email,
-      },
-    });
-
+    const member = await this.memberRepository.findByEmail(email);
     return !!member;
   }
 
   async checkNickname(nickname: string): Promise<boolean> {
-    const member = await this.memberRepository.findOne({
-      where: {
-        nickname: nickname,
-      },
-    });
-
+    const member = await this.memberRepository.findByNickname(nickname);
     return !!member;
   }
 
@@ -64,31 +49,14 @@ export class SignupService {
     password: string;
     confirmPassword: string;
   }) {
-    //비밀번호와 비밀번호확인 일치
     if (password !== confirmPassword) {
-      throw new PasswordMismatchException({ password, confirmPassword });
+      throw new PasswordMismatchException();
     }
 
-    //이메일 중복검사
-    const emailDuplicateMember = await this.memberRepository.findOne({
-      where: {
-        email,
-      },
-    });
+    const byEmail = await this.memberRepository.findByEmail(email);
+    if (byEmail) throw new DuplicateEmailException(email);
 
-    if (emailDuplicateMember) {
-      throw new DuplicateEmailException(email);
-    }
-
-    //닉네임 중복검사
-    const nicknameDuplicateMember = await this.memberRepository.findOne({
-      where: {
-        nickname,
-      },
-    });
-
-    if (nicknameDuplicateMember) {
-      throw new DuplicateNicknameException(nickname);
-    }
+    const byNickname = await this.memberRepository.findByNickname(nickname);
+    if (byNickname) throw new DuplicateNicknameException(nickname);
   }
 }
