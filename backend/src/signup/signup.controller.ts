@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ServiceApiResponse } from 'src/global/service-api-response';
-import { SignupRequest } from 'src/signup-request';
-import { SignupService } from 'src/signup.service';
+import { SignupRequest } from 'src/signup/signup-request';
+import { SignupService } from 'src/signup/signup.service';
 
 @Controller('api/signup')
 @ApiTags('api/signup')
@@ -50,8 +50,11 @@ export class SignupController {
     }>
   > {
     const isDuplicate = await this.signupService.checkNickname(nickname);
+    const message = isDuplicate
+      ? '닉네임이 중복됩니다. 다시 입력해주세요'
+      : '사용 가능한 닉네임입니다.';
 
-    return ServiceApiResponse.success('사용 가능한 닉네임입니다.', {
+    return ServiceApiResponse.success(message, {
       available: !isDuplicate,
     });
   }

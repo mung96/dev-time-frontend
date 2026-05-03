@@ -1,7 +1,7 @@
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { SignupService } from './signup.service';
 import { Test } from '@nestjs/testing';
-import { Member } from 'src/member.entity';
+import { Member } from 'src/member/member.entity';
 
 const TEST_EMAIL = 'test@example.com';
 const TEST_NICKNAME = '데품타';

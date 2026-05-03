@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Member } from 'src/member.entity';
-import { SignupController } from 'src/signup.controller';
-import { SignupService } from 'src/signup.service';
+import { Member } from 'src/member/member.entity';
+import { MemberRepository } from 'src/member/member.repository';
+import { SignupController } from 'src/signup/signup.controller';
+import { SignupService } from 'src/signup/signup.service';
 
 @Module({
   imports: [
@@ -27,6 +28,6 @@ import { SignupService } from 'src/signup.service';
     }),
   ],
   controllers: [SignupController],
-  providers: [SignupService],
+  providers: [SignupService, MemberRepository],
 })
 export class AppModule {}
