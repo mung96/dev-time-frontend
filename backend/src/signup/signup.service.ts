@@ -1,6 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
+import { DuplicateEmailException } from 'src/global/exception/duplicate-email.exception';
+import { DuplicateNicknameException } from 'src/global/exception/duplicate-nickname.exception';
+import { PasswordMismatchException } from 'src/global/exception/password-mismatch.exception';
 import { Member } from 'src/member/member.entity';
 import { SignupRequest } from 'src/signup/signup-request';
 import { Repository } from 'typeorm';
@@ -15,25 +18,13 @@ export class SignupService {
   async signup(signupRequest: SignupRequest): Promise<void> {
     const { email, nickname, password, confirmPassword } = signupRequest;
 
-    //이메일, 닉네임 중복검사
-    const member = await this.memberRepository.findOne({
-      where: [{ email }, { nickname }],
-    });
-
-    if (member) {
-      throw new BadRequestException(
-        '이메일 또는 닉네임이 중복됩니다. 다시 입력해주세요',
-      );
-    }
-
-    //비밀번호와 비밀번호확인 일치
-    if (password !== confirmPassword) {
-      throw new BadRequestException('비밀번호와 확인 값이 일치하지 않습니다.');
-    }
+    // 회원가입 유효성 검사
+    await this.validateSignup({ email, nickname, password, confirmPassword });
 
     //암호화
     const hashedPassword = await hash(password, 10);
 
+    // 저장
     const newMember = this.memberRepository.create({
       email,
       nickname,
@@ -60,5 +51,44 @@ export class SignupService {
     });
 
     return !!member;
+  }
+
+  private async validateSignup({
+    email,
+    nickname,
+    password,
+    confirmPassword,
+  }: {
+    email: string;
+    nickname: string;
+    password: string;
+    confirmPassword: string;
+  }) {
+    //비밀번호와 비밀번호확인 일치
+    if (password !== confirmPassword) {
+      throw new PasswordMismatchException({ password, confirmPassword });
+    }
+
+    //이메일 중복검사
+    const emailDuplicateMember = await this.memberRepository.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (emailDuplicateMember) {
+      throw new DuplicateEmailException(email);
+    }
+
+    //닉네임 중복검사
+    const nicknameDuplicateMember = await this.memberRepository.findOne({
+      where: {
+        nickname,
+      },
+    });
+
+    if (nicknameDuplicateMember) {
+      throw new DuplicateNicknameException(nickname);
+    }
   }
 }
