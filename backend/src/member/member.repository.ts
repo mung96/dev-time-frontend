@@ -4,34 +4,51 @@ import { DataAccessException } from 'src/common/exception/data-access.exception'
 import { DuplicateEmailException } from 'src/common/exception/duplicate-email.exception';
 import { DuplicateNicknameException } from 'src/common/exception/duplicate-nickname.exception';
 import { Member } from 'src/member/member.entity';
-import { QueryFailedError, Repository } from 'typeorm';
+import {
+  DeepPartial,
+  QueryFailedError,
+  Repository,
+  SaveOptions,
+} from 'typeorm';
 
 const PG_UNIQUE_VIOLATION = '23505';
 const UQ_MEMBER_EMAIL = 'UQ_MEMBER_EMAIL';
 const UQ_MEMBER_NICKNAME = 'UQ_MEMBER_NICKNAME';
 
 @Injectable()
-export class MemberRepository {
+export class MemberRepository extends Repository<Member> {
   constructor(
     @InjectRepository(Member)
-    private readonly repository: Repository<Member>,
-  ) {}
-
-  create(data: Partial<Member>): Member {
-    return this.repository.create(data);
+    repo: Repository<Member>,
+  ) {
+    super(repo.target, repo.manager, repo.queryRunner);
   }
 
   findByEmail(email: string): Promise<Member | null> {
-    return this.repository.findOne({ where: { email } });
+    return this.findOne({ where: { email } });
   }
 
   findByNickname(nickname: string): Promise<Member | null> {
-    return this.repository.findOne({ where: { nickname } });
+    return this.findOne({ where: { nickname } });
   }
 
-  async save(member: Member): Promise<void> {
+  override save(
+    entity: DeepPartial<Member>,
+    options?: SaveOptions,
+  ): Promise<Member>;
+  override save(
+    entities: DeepPartial<Member>[],
+    options?: SaveOptions,
+  ): Promise<Member[]>;
+  override async save(
+    entityOrEntities: DeepPartial<Member> | DeepPartial<Member>[],
+    options?: SaveOptions,
+  ): Promise<Member | Member[]> {
     try {
-      await this.repository.save(member);
+      if (Array.isArray(entityOrEntities)) {
+        return await super.save(entityOrEntities, options);
+      }
+      return await super.save(entityOrEntities, options);
     } catch (error) {
       if (error instanceof QueryFailedError) {
         const { code, constraint } = error.driverError as {
@@ -39,10 +56,13 @@ export class MemberRepository {
           constraint: string;
         };
         if (code === PG_UNIQUE_VIOLATION) {
+          const member = Array.isArray(entityOrEntities)
+            ? entityOrEntities[0]
+            : entityOrEntities;
           if (constraint === UQ_MEMBER_EMAIL)
-            throw new DuplicateEmailException(member.email);
+            throw new DuplicateEmailException(member.email as string);
           if (constraint === UQ_MEMBER_NICKNAME)
-            throw new DuplicateNicknameException(member.nickname);
+            throw new DuplicateNicknameException(member.nickname as string);
         }
       }
       throw new DataAccessException(error);
