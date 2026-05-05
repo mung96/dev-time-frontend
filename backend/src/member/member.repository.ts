@@ -11,7 +11,7 @@ import {
   SaveOptions,
 } from 'typeorm';
 
-const PG_UNIQUE_VIOLATION = '23505';
+const MYSQL_UNIQUE_VIOLATION = '1062';
 const UQ_MEMBER_EMAIL = 'UQ_MEMBER_EMAIL';
 const UQ_MEMBER_NICKNAME = 'UQ_MEMBER_NICKNAME';
 
@@ -55,7 +55,7 @@ export class MemberRepository extends Repository<Member> {
           code: string;
           constraint: string;
         };
-        if (code === PG_UNIQUE_VIOLATION) {
+        if (code === MYSQL_UNIQUE_VIOLATION) {
           const member = Array.isArray(entityOrEntities)
             ? entityOrEntities[0]
             : entityOrEntities;
