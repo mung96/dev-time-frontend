@@ -13,4 +13,7 @@ export class Member extends BaseModel {
 
   @Column({ nullable: false, select: false })
   password: string;
+
+  @Column({ nullable: true })
+  lastAccessedAt: Date | null;
 }
