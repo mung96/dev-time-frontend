@@ -16,8 +16,11 @@ export class AuthController {
   @Post('/login')
   @HttpCode(HttpStatus.OK)
   @ApiServiceResponse(LoginResponse)
-  login(@Body() loginRequest: LoginRequest): ServiceApiResponse<LoginResponse> {
-    const response = this.authService.login();
+  async login(
+    @Body() loginRequest: LoginRequest,
+  ): Promise<ServiceApiResponse<LoginResponse>> {
+    const { email, password } = loginRequest;
+    const response = await this.authService.login({ email, password });
     return ServiceApiResponse.success('로그인 성공', response);
   }
 
