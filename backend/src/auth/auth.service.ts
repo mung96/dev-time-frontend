@@ -35,14 +35,20 @@ export class AuthService {
       throw new InvalidCredentialsException(email);
     }
 
-    // 중복 로그인이면 기존, access, refresh를 무효화한다
-    // member-session을 조회해. expiredAt이 지난게 없으면 중복로그인
+    // 중복 로그인 체크
     const sessions = await this.memberSessionRepository.findBy({
       member: { id: member.id },
     });
-    const isDuplicateLogin = sessions.some(
-      (session) => session.expiredAt > new Date(),
-    );
+
+    const activeSessionIds = sessions
+      .filter((session) => session.expiredAt > new Date())
+      .map((session) => session.id);
+
+    const isDuplicateLogin = activeSessionIds.length > 0;
+
+    if (isDuplicateLogin) {
+      await this.memberSessionRepository.softDelete(activeSessionIds);
+    }
 
     // TODO: 타이머 구현후, 기존 로그인 기기의 타이머 기록은 삭제되어야함
 
