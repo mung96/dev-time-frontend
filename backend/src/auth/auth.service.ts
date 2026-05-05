@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   private readonly ACCESS_TOKEN_EXPIRED_MS = 60 * 60 * 1000; //1시간
-  private readonly REFRESH_TOKEN_EXPIRED_MS = 7 * 24 * 60 * 60 * 1000; //7일
+  private readonly REFRESH_TOKEN_EXPIRED_MS = 10 * 24 * 60 * 60 * 1000; //10일
 
   async login({
     email,
