@@ -11,7 +11,7 @@ import {
   SaveOptions,
 } from 'typeorm';
 
-const MYSQL_UNIQUE_VIOLATION = '1062';
+const MYSQL_UNIQUE_VIOLATION = 1062;
 const UQ_MEMBER_EMAIL = 'UQ_MEMBER_EMAIL';
 const UQ_MEMBER_NICKNAME = 'UQ_MEMBER_NICKNAME';
 
@@ -51,17 +51,17 @@ export class MemberRepository extends Repository<Member> {
       return await super.save(entityOrEntities, options);
     } catch (error) {
       if (error instanceof QueryFailedError) {
-        const { code, constraint } = error.driverError as {
-          code: string;
-          constraint: string;
+        const { errno, sqlMessage } = error.driverError as {
+          errno: number;
+          sqlMessage: string;
         };
-        if (code === MYSQL_UNIQUE_VIOLATION) {
+        if (errno === MYSQL_UNIQUE_VIOLATION) {
           const member = Array.isArray(entityOrEntities)
             ? entityOrEntities[0]
             : entityOrEntities;
-          if (constraint === UQ_MEMBER_EMAIL)
+          if (sqlMessage.includes(UQ_MEMBER_EMAIL))
             throw new DuplicateEmailException(member.email as string);
-          if (constraint === UQ_MEMBER_NICKNAME)
+          if (sqlMessage.includes(UQ_MEMBER_NICKNAME))
             throw new DuplicateNicknameException(member.nickname as string);
         }
       }
