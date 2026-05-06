@@ -19,6 +19,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     if (exception instanceof ValidationException) {
+      if (exception.logMessage) {
+        this.logger.warn(exception.logMessage);
+      }
       return response
         .status(400)
         .json(ServiceApiResponse.fail(exception.message));

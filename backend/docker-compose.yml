@@ -1,15 +1,16 @@
 services:
-  postgres:
-    image: postgres:17
+  mysql:
+    image: mysql:8
     container_name: devtime-db
     ports:
-      - '5432:5432'
+      - '3306:3306'
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: secret
-      POSTGRES_DB: devtime
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: devtime
+      MYSQL_ROOT_PASSWORD: root
     volumes:
-      - devtime-data:/var/lib/postgresql/data
+      - devtime-data:/var/lib/mysql
 
 volumes:
   devtime-data:
