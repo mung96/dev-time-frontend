@@ -1,4 +1,4 @@
-import { MemberSessionRepository } from './../member/member-session.repository';
+import { MemberSessionRepository } from 'src/member/member-session.repository';
 import { Injectable } from '@nestjs/common';
 import { LoginResponse } from 'src/auth/login-response';
 import { InvalidCredentialsException } from 'src/common/exception/invalid-credentials.exception';
