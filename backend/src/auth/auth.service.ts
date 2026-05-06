@@ -19,13 +19,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {
-    this.accessTokenExpiredSec = this.configService.get<number>(
-      'ACCESS_TOKEN_EXPIRED_SEC',
-      3600,
+    this.accessTokenExpiredSec = Number(
+      this.configService.get<number>('ACCESS_TOKEN_EXPIRED_SEC') || 0,
     );
-    this.refreshTokenExpiredSec = this.configService.get<number>(
-      'REFRESH_TOKEN_EXPIRED_SEC',
-      864000,
+    this.refreshTokenExpiredSec = Number(
+      this.configService.get<number>('REFRESH_TOKEN_EXPIRED_SEC') || 0,
     );
   }
 
