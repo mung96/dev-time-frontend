@@ -1,5 +1,6 @@
 import { MemberSessionRepository } from 'src/member/member-session.repository';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { LoginResponse } from 'src/auth/login-response';
 import { InvalidCredentialsException } from 'src/common/exception/invalid-credentials.exception';
 import { MemberRepository } from 'src/member/member.repository';
@@ -9,14 +10,24 @@ import { Member } from 'src/member/member.entity';
 
 @Injectable()
 export class AuthService {
+  private readonly accessTokenExpiredSec: number;
+  private readonly refreshTokenExpiredSec: number;
+
   constructor(
     private readonly memberRepository: MemberRepository,
     private readonly memberSessionRepository: MemberSessionRepository,
     private readonly jwtService: JwtService,
-  ) {}
-
-  private readonly ACCESS_TOKEN_EXPIRED_MS = 60 * 60 * 1000; //1시간
-  private readonly REFRESH_TOKEN_EXPIRED_MS = 10 * 24 * 60 * 60 * 1000; //10일
+    private readonly configService: ConfigService,
+  ) {
+    this.accessTokenExpiredSec = this.configService.get<number>(
+      'ACCESS_TOKEN_EXPIRED_SEC',
+      3600,
+    );
+    this.refreshTokenExpiredSec = this.configService.get<number>(
+      'REFRESH_TOKEN_EXPIRED_SEC',
+      864000,
+    );
+  }
 
   async login({
     email,
@@ -55,10 +66,10 @@ export class AuthService {
     // access, refresh를 발급한다.
     const payload = { sub: member.id };
     const accessToken = await this.jwtService.signAsync(payload, {
-      expiresIn: this.ACCESS_TOKEN_EXPIRED_MS / 1000,
+      expiresIn: this.accessTokenExpiredSec,
     });
     const refreshToken = await this.jwtService.signAsync(payload, {
-      expiresIn: this.REFRESH_TOKEN_EXPIRED_MS / 1000,
+      expiresIn: this.refreshTokenExpiredSec,
     });
 
     // db에 refresh insert
@@ -66,7 +77,7 @@ export class AuthService {
     await this.memberSessionRepository.save({
       member: { id: member.id },
       refreshToken: hashedRefreshToken,
-      expiredAt: new Date(Date.now() + this.REFRESH_TOKEN_EXPIRED_MS),
+      expiredAt: new Date(Date.now() + this.refreshTokenExpiredSec * 1000),
     });
 
     // 최초로그인판정 + 로그인 기록 업데이트
