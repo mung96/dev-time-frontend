@@ -20,12 +20,21 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {
-    this.accessTokenExpiredSec = Number(
-      this.configService.get<number>('ACCESS_TOKEN_EXPIRED_SEC') || 0,
+    const accessSec = this.configService.get<number>(
+      'ACCESS_TOKEN_EXPIRED_SEC',
     );
-    this.refreshTokenExpiredSec = Number(
-      this.configService.get<number>('REFRESH_TOKEN_EXPIRED_SEC') || 0,
+    const refreshSec = this.configService.get<number>(
+      'REFRESH_TOKEN_EXPIRED_SEC',
     );
+
+    if (!accessSec || !refreshSec) {
+      throw new Error(
+        'ACCESS_TOKEN_EXPIRED_SEC, REFRESH_TOKEN_EXPIRED_SEC 환경 변수가 필요합니다.',
+      );
+    }
+
+    this.accessTokenExpiredSec = Number(accessSec);
+    this.refreshTokenExpiredSec = Number(refreshSec);
   }
 
   async login({
