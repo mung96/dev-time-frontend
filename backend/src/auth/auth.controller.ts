@@ -37,8 +37,6 @@ export class AuthController {
     return ServiceApiResponse.success('로그인 성공', response);
   }
 
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth()
   @Get('profile')
   getProfile(@Req() req: Request): null {
     console.log(req.member);
@@ -48,9 +46,13 @@ export class AuthController {
 
   @Post('/logout')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiServiceResponse()
-  async logout(): Promise<ServiceApiResponse<null>> {
-    await this.authService.logout();
+  async logout(@Req() req: Request): Promise<ServiceApiResponse<null>> {
+    const { sub: memberId } = req.member;
+    await this.authService.logout(memberId);
+
     return ServiceApiResponse.success('로그아웃 성공');
   }
 

@@ -1,3 +1,4 @@
+import { MemberSession } from 'src/member/member-session.entity';
 import { MemberSessionRepository } from 'src/member/member-session.repository';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -100,7 +101,16 @@ export class AuthService {
     };
   }
 
-  async logout() {}
+  async logout(memberId: number) {
+    const memberSession = await this.memberSessionRepository.findBy({
+      member: { id: memberId },
+    });
+
+    const memberSessionIds = memberSession.map((session) => session.id);
+    console.log('memberSessionIds', memberSessionIds);
+    await this.memberSessionRepository.softDelete(memberSessionIds);
+    // refreshToken을 soft-delete
+  }
 
   async refreshAccessToken() {}
 }
