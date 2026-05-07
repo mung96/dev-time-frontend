@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class RefreshAccessTokenRequest {
+export class LogoutRequest {
   @ApiProperty({
     description: '리프레시 토큰',
     example: 'eyJhbGciOi...',

@@ -9,6 +9,7 @@ import {
   Post,
   Req,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiServiceResponse } from 'src/global/api-service-response.decorator';
@@ -18,6 +19,7 @@ import { RefreshAccessTokenRequest } from 'src/auth/refresh-access-token-request
 import { RefreshAccessTokenResponse } from 'src/auth/refresh-access-token-response';
 import { AuthGuard } from 'src/auth/auth.guard';
 import type { Request } from 'express';
+import { LogoutRequest } from 'src/auth/logout-request';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -49,9 +51,14 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @ApiServiceResponse()
-  async logout(@Req() req: Request): Promise<ServiceApiResponse<null>> {
+  async logout(
+    @Req() req: Request,
+    @Body() logoutRequest: LogoutRequest,
+  ): Promise<ServiceApiResponse<null>> {
     const { sub: memberId } = req.member;
-    await this.authService.logout(memberId);
+    const { refreshToken } = logoutRequest;
+
+    await this.authService.logout({ memberId, refreshToken });
 
     return ServiceApiResponse.success('로그아웃 성공');
   }
