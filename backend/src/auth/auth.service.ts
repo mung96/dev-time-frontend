@@ -104,12 +104,13 @@ export class AuthService {
   async logout(memberId: number) {
     const memberSession = await this.memberSessionRepository.findBy({
       member: { id: memberId },
+      expiredAt: MoreThan(new Date()),
     });
 
     const memberSessionIds = memberSession.map((session) => session.id);
-    console.log('memberSessionIds', memberSessionIds);
+
+    if (memberSessionIds.length === 0) return; // delete 멱등성을 고려하여 예외가 아닌 그냥 종료
     await this.memberSessionRepository.softDelete(memberSessionIds);
-    // refreshToken을 soft-delete
   }
 
   async refreshAccessToken() {}
