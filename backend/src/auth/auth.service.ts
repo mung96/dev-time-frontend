@@ -7,6 +7,7 @@ import { MemberRepository } from 'src/member/member.repository';
 import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Member } from 'src/member/member.entity';
+import { MoreThan } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -45,13 +46,11 @@ export class AuthService {
     }
 
     // 중복 로그인 체크
-    const sessions = await this.memberSessionRepository.findBy({
+    const activeSessions = await this.memberSessionRepository.findBy({
       member: { id: member.id },
+      expiredAt: MoreThan(new Date()),
     });
-
-    const activeSessionIds = sessions
-      .filter((session) => session.expiredAt > new Date())
-      .map((session) => session.id);
+    const activeSessionIds = activeSessions.map((session) => session.id);
 
     const isDuplicateLogin = activeSessionIds.length > 0;
 
